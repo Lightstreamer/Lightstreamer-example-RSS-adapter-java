@@ -58,7 +58,7 @@ You have to create a specific folder to deploy the RSS Demo Adapters otherwise g
   <?xml version="1.0"?>
 
   <!-- Mandatory. Define an Adapter Set and sets its unique ID. -->
-  <adapters_conf id="DEMO">
+  <adapters_conf id="RSSDEMO">
 
   <metadata_provider>
     <adapter_class>rss_demo.adapters.RSSMetadataAdapter</adapter_class>
