@@ -1,4 +1,5 @@
 # Lightstreamer - RSS News Demo - Java Adapter #
+<!-- START DESCRIPTION RSS News Demo -->
 
 This project shows the RSS Demo Data and Metadata Adapters and how they can be plugged into Lightstreamer Server and used to feed the [Lightstreamer - RSS News Demo - HTML Client](https://github.com/Weswit/Lightstreamer-example-RSS-client-javascript) front-end. Please refer [here](http://www.lightstreamer.com/latest/Lightstreamer_Allegro-Presto-Vivace_5_1_Colosseo/Lightstreamer/DOCS-SDKs/General%20Concepts.pdf) for more details about Lightstreamer Adapters.
 The [Lightstreamer - RSS News Demo - HTML Client](https://github.com/Weswit/Lightstreamer-example-RSS-client-javascript) is a simple news aggregator application based on Lightstreamer.
@@ -19,6 +20,7 @@ Contains the source code for a basic RSS news reader.
  
 <br>
 See the source code comments for further details.
+<!-- END DESCRIPTION RSS News Demo -->
 
 # Build #
 
@@ -29,6 +31,7 @@ Otherwise follow these steps:
 * Get the informa.jar and jdom.jar files from the [News Aggregation Library for Java download](http://sourceforge.net/projects/informa/).
 * Get the commons-logging jar file from [Apache commons](http://commons.apache.org/proper/commons-logging/download_logging.cgi).
 * Create the jars LS_rss_metadata_adapter.jar, LS_rss_data_adapter.jar and LS_rss_data_adapter.jar with commands like these:
+
 ```sh
  >javac -source 1.7 -target 1.7 -nowarn -g -classpath lib/log4j-1.2.15.jar;lib/ls-adapter-interface/ls-adapter-interface.jar;lib/ls-generic-adapters/ls-generic-adapters.jar;lib/informa.jar;lib/jdom.jar -sourcepath src/src_feed -d tmp_classes src/src_feed/rss_demo/rss_reader/RSSReaderProvider.java
 
@@ -116,8 +119,11 @@ Please test your Adapter with one of the clients in the [list](https://github.co
 # See Also #
 
 ## Clients using this Adapter ##
+<!-- START RELATED_ENTRIES -->
 
 * [Lightstreamer - RSS News Demo - HTML Client](https://github.com/Weswit/Lightstreamer-example-RSS-client-javascript)
+
+<!-- END RELATED_ENTRIES -->
 
 ## Related projects ##
 
