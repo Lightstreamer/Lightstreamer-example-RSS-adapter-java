@@ -6,15 +6,15 @@ The [Lightstreamer - RSS News Demo - HTML Client](https://github.com/Weswit/Ligh
 
 The project is comprised of source code and a deployment example. The source code is divided into three folders.
 
-## RSS Data Adapter - src_adapter ##
+## RSS Data Adapter ##
 
 Contains the source code for the RSS Data Adapter that polls all the feeds currently subscribed to and delivers the updates to the Server. It also delivers the list of subscribed feeds for each user.
 
-## Metadata Adapter - src_metadata ##
+## Metadata Adapter ##
 
 Contains the source code for a Metadata Adapter to be associated with the RSS Demo Data Adapter. This Metadata Adapter inherits from LiteralBasedProvider. It coordinates, together with the Data Adapter, the association among items, users, and subscribed feed.
  
-## RSS Reader - src_feed ##
+## RSS Reader ##
  
 Contains the source code for a basic RSS news reader.
  
@@ -118,14 +118,14 @@ Please test your Adapter with one of the clients in the [list](https://github.co
 
 # See Also #
 
-## Clients using this Adapter ##
+## Client Using This Adapter ##
 <!-- START RELATED_ENTRIES -->
 
 * [Lightstreamer - RSS News Demo - HTML Client](https://github.com/Weswit/Lightstreamer-example-RSS-client-javascript)
 
 <!-- END RELATED_ENTRIES -->
 
-## Related projects ##
+## Related Projects ##
 
 * [Lightstreamer - Reusable Metadata Adapters - Java Adapter](https://github.com/Weswit/Lightstreamer-example-ReusableMetadata-adapter-java)
 
