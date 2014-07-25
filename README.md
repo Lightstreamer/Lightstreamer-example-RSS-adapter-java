@@ -1,62 +1,38 @@
-# Lightstreamer - RSS News Demo - Java Adapter #
+# Lightstreamer - RSS News Demo - Java Adapter
+
 <!-- START DESCRIPTION lightstreamer-example-rss-adapter-java -->
 
 This project shows the RSS Demo Data and Metadata Adapters and how they can be plugged into Lightstreamer Server and used to feed the [Lightstreamer - RSS News Demo - HTML Client](https://github.com/Weswit/Lightstreamer-example-RSS-client-javascript) front-end. Please refer [here](http://www.lightstreamer.com/latest/Lightstreamer_Allegro-Presto-Vivace_5_1_Colosseo/Lightstreamer/DOCS-SDKs/General%20Concepts.pdf) for more details about Lightstreamer Adapters.
 The [Lightstreamer - RSS News Demo - HTML Client](https://github.com/Weswit/Lightstreamer-example-RSS-client-javascript) is a simple news aggregator application based on Lightstreamer.
 
-The project is comprised of source code and a deployment example. The source code is divided into three folders.
+## Details
 
-## RSS Data Adapter ##
+The project is comprised of source code and a deployment example. 
+
+### Dig the Code
+
+The source code is divided into three folders.
+
+#### RSS Data Adapter
 
 Contains the source code for the RSS Data Adapter that polls all the feeds currently subscribed to and delivers the updates to the Server. It also delivers the list of subscribed feeds for each user.
 
-## Metadata Adapter ##
+#### Metadata Adapter
 
 Contains the source code for a Metadata Adapter to be associated with the RSS Demo Data Adapter. This Metadata Adapter inherits from LiteralBasedProvider. It coordinates, together with the Data Adapter, the association among items, users, and subscribed feed.
  
-## RSS Reader ##
+#### RSS Reader
  
 Contains the source code for a basic RSS news reader.
- 
-<br>
+ <br>
 See the source code comments for further details.
 <!-- END DESCRIPTION lightstreamer-example-rss-adapter-java -->
 
-# Build #
+### The Adapter Set Configuration
 
-If you want to skip the build process of this Adapter please note that in the [deploy](https://github.com/Weswit/Lightstreamer-example-RSS-adapter-java/releases) release of this project you can find the "deploy.zip" file that contains a ready-made deployment resource for the Lightstreamer server.
-Otherwise follow these steps:
+This Adapter Set is configured and will be referenced by the clients as `RSSDEMO`. 
 
-* Get the ls-adapter-interface.jar, ls-generic-adapters.jar, and log4j-1.2.15.jar files from the [latest Lightstreamer distribution](http://www.lightstreamer.com/download).
-* Get the informa.jar and jdom.jar files from the [News Aggregation Library for Java download](http://sourceforge.net/projects/informa/).
-* Get the commons-logging jar file from [Apache commons](http://commons.apache.org/proper/commons-logging/download_logging.cgi).
-* Create the jars LS_rss_metadata_adapter.jar, LS_rss_data_adapter.jar and LS_rss_data_adapter.jar with commands like these:
-
-```sh
- >javac -source 1.7 -target 1.7 -nowarn -g -classpath lib/log4j-1.2.15.jar;lib/ls-adapter-interface/ls-adapter-interface.jar;lib/ls-generic-adapters/ls-generic-adapters.jar;lib/informa.jar;lib/jdom.jar -sourcepath src/src_feed -d tmp_classes src/src_feed/rss_demo/rss_reader/RSSReaderProvider.java
-
- >jar cvf LS_rss_data_adapter.jar -C tmp_classes src_feed
-
- >javac -source 1.7 -target 1.7 -nowarn -g -classpath lib/log4j-1.2.15.jar;lib/ls-adapter-interface/ls-adapter-interface.jar;lib/ls-generic-adapters/ls-generic-adapters.jar;LS_rss_reader.jar -sourcepath src/src_adapter -d tmp_classes src/src_adapter/rss_demo/adapters/RSSDataAdapter.java
-
- >jar cvf LS_rss_data_adapter.jar -C tmp_classes src_adapter
- 
- >javac -source 1.7 -target 1.7 -nowarn -g -classpath lib/log4j-1.2.15.jar;lib/ls-adapter-interface/ls-adapter-interface.jar;lib/ls-generic-adapters/ls-generic-adapters.jar;LS_rss_data_adapter.jar -sourcepath src/src_metadata -d tmp_classes src/src_metadata/rss_demo/adapters/RSSMetadataAdapter.java
- 
- >jar cvf LS_rss_metadata_adapter.jar -C tmp_classes src_metadata
-```
-
-# Deploy #
-
-Now you are ready to deploy the RSS Demo Adapter into Lighstreamer server.<br>
-After you have Downloaded and installed Lightstreamer, please go to the "adapters" folder of your Lightstreamer Server installation. You should find a "Demo" folder containing some adapters ready-made for several demos. You have to remove the "Demo" folder if you want to install the RSS Adapter Set alone. 
-Please follow the below steps to configure the RSS Adapter Set properly.
-
-You have to create a specific folder to deploy the RSS Demo Adapters otherwise get the ready-made "rss" deploy folder from "deploy.zip" of the [latest release](https://github.com/Weswit/Lightstreamer-example-RSS-adapter-java/releases) of this project and skips the next steps.
-
-1. Create a new folder, let's call it "rss", and a "lib" folder inside it.
-2. Create an "adapters.xml" file inside the "rss" folder and use the following content (this is an example configuration, you can modify it to your liking):
-
+The `adapters.xml` file for the *RSS News Demo*, should look like:
 ```xml      
   <?xml version="1.0"?>
 
@@ -88,9 +64,10 @@ You have to create a specific folder to deploy the RSS Demo Adapters otherwise g
 
   </adapters_conf>
 ```
-<br> 
-3. Create an "rss_reader_conf.txt" configuration file inside the "rss" folder and use the following content (this is an example configuration, you can modify it to your liking):
 
+#### RSS Reader Configuration
+
+The `rss_reader_conf.txt` configuration file used by the adapter (this is an example configuration, you can modify it to your liking):
 ```txt
 threadTimeout = 20
 wait4Info = 60000
@@ -103,33 +80,58 @@ minNumRunningThreads = 3
 #proxyHost = proxy1.mycomp.com
 #proxyPort = 3128
 ```
-<br> 
-4. Copy into "/rss/lib" the jars (LS_rss_metadata_adapter.jar, LS_rss_data_adapter.jar and LS_rss_data_adapter.jar) created in the previous section and the external tools jars (informa.jar, jdom.jar and commons-logging.jar).
 
-Now your "rss" folder is ready to be deployed in the Lightstreamer server, please follow these steps:<br>
+Please refer [here](http://www.lightstreamer.com/latest/Lightstreamer_Allegro-Presto-Vivace_5_1_Colosseo/Lightstreamer/DOCS-SDKs/General%20Concepts.pdf) for more details about Lightstreamer Adapters.<br>
 
-1. Make sure you have installed Lightstreamer Server, as explained in the GETTING_STARTED.TXT file in the installation home directory.
-2. Make sure that Lightstreamer Server is not running.
-3. Copy the "rss" directory and all of its files to the "adapters" subdirectory in your Lightstreamer Server installation home directory.
-4. Copy the "ls-generic-adapters.jar" file from the "lib" directory of the sibling "Reusable_MetadataAdapters" SDK example to the "shared/lib" subdirectory in your Lightstreamer Server installation home directory.
-5. Lightstreamer Server is now ready to be launched.
 
-Please test your Adapter with one of the clients in the [list](https://github.com/Weswit/Lightstreamer-example-RSS-adapter-java#clients-using-this-adapter) below.
+## Install
 
-# See Also #
+If you want to install a version of the *RSS News Demo* in your local Lightstreamer Server, follow these steps.
 
-## Client Using This Adapter ##
+* Download *Lightstreamer Server* (Lightstreamer Server comes with a free non-expiring demo license for 20 connected users) from [Lightstreamer Download page](http://www.lightstreamer.com/download.htm), and install it, as explained in the `GETTING_STARTED.TXT` file in the installation home directory.
+* Make sure that Lightstreamer Server is not running.
+* Get the `deploy.zip` file of the [latest release](https://github.com/Weswit/Lightstreamer-example-RSS-adapter-java/releases), unzip it, and copy the `RSS` folder into the `adapters` folder of your Lightstreamer Server installation.
+* Copy the `ls-generic-adapters.jar` file from the `lib` directory of the sibling "Reusable_MetadataAdapters" SDK example to the `shared/lib` subdirectory in your Lightstreamer Server installation home directory.
+* Launch Lightstreamer Server.
+* Test the Adapter, launching the [Lightstreamer - RSS News Demo - HTML Client](https://github.com/Weswit/Lightstreamer-example-RSS-client-javascript) listed in [Clients Using This Adapter](https://github.com/Weswit/Lightstreamer-example-RSS-adapter-java#client-using-this-adapter).
+
+## Build
+
+To build your own version of `LS_rss_data_adapter.jar`, `LS_rss_data_adapter.jar`, and `LS_rss_metadata_adapter.jar`, instead of using the one provided in the `deploy.zip` file from the [Install](https://github.com/Weswit/Lightstreamer-example-RSS-adapter-java#install) section above, follow these steps.
+
+* Download this project.
+* Get the `ls-adapter-interface.jar`.`ls-generic-adapters.jar`, and `log4j-1.2.15.jar` files from the [latest Lightstreamer distribution](http://www.lightstreamer.com/download), and copy them into the `lib` directory.
+* Get the `informa.jar` and `jdom.jar` files from the [News Aggregation Library for Java download](http://sourceforge.net/projects/informa/).
+* Get the `commons-logging.jar` file from [Apache commons](http://commons.apache.org/proper/commons-logging/download_logging.cgi).
+* Create the jars `LS_rss_metadata_adapter.jar`, `LS_rss_data_adapter.jar`, and `LS_rss_data_adapter.jar` with commands like these:
+
+```sh
+ >javac -source 1.7 -target 1.7 -nowarn -g -classpath lib/log4j-1.2.15.jar;lib/ls-adapter-interface/ls-adapter-interface.jar;lib/ls-generic-adapters/ls-generic-adapters.jar;lib/informa.jar;lib/jdom.jar -sourcepath src/src_feed -d tmp_classes src/src_feed/rss_demo/rss_reader/RSSReaderProvider.java
+
+ >jar cvf LS_rss_data_adapter.jar -C tmp_classes src_feed
+
+ >javac -source 1.7 -target 1.7 -nowarn -g -classpath lib/log4j-1.2.15.jar;lib/ls-adapter-interface/ls-adapter-interface.jar;lib/ls-generic-adapters/ls-generic-adapters.jar;LS_rss_reader.jar -sourcepath src/src_adapter -d tmp_classes src/src_adapter/rss_demo/adapters/RSSDataAdapter.java
+
+ >jar cvf LS_rss_data_adapter.jar -C tmp_classes src_adapter
+ 
+ >javac -source 1.7 -target 1.7 -nowarn -g -classpath lib/log4j-1.2.15.jar;lib/ls-adapter-interface/ls-adapter-interface.jar;lib/ls-generic-adapters/ls-generic-adapters.jar;LS_rss_data_adapter.jar -sourcepath src/src_metadata -d tmp_classes src/src_metadata/rss_demo/adapters/RSSMetadataAdapter.java
+ 
+ >jar cvf LS_rss_metadata_adapter.jar -C tmp_classes src_metadata
+```
+
+## See Also
+
+### Client Using This Adapter
 <!-- START RELATED_ENTRIES -->
 
 * [Lightstreamer - RSS News Demo - HTML Client](https://github.com/Weswit/Lightstreamer-example-RSS-client-javascript)
 
 <!-- END RELATED_ENTRIES -->
 
-## Related Projects ##
+### Related Projects
 
 * [Lightstreamer - Reusable Metadata Adapters - Java Adapter](https://github.com/Weswit/Lightstreamer-example-ReusableMetadata-adapter-java)
 
+## Lightstreamer Compatibility Notes
 
-# Lightstreamer Compatibility Notes #
-
-- Compatible with Lightstreamer SDK for Java Adapters since 5.1
+* Compatible with Lightstreamer SDK for Java Adapters since 5.1
