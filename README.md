@@ -86,7 +86,7 @@ Please refer [here](http://www.lightstreamer.com/latest/Lightstreamer_Allegro-Pr
 
 ## Install
 
-If you want to install a version of the *RSS News Demo* in your local Lightstreamer Server, follow these steps.
+If you want to install a version of the *RSS News Demo* in your local Lightstreamer Server, follow these steps:
 
 * Download *Lightstreamer Server* (Lightstreamer Server comes with a free non-expiring demo license for 20 connected users) from [Lightstreamer Download page](http://www.lightstreamer.com/download.htm), and install it, as explained in the `GETTING_STARTED.TXT` file in the installation home directory.
 * Make sure that Lightstreamer Server is not running.
@@ -97,10 +97,10 @@ If you want to install a version of the *RSS News Demo* in your local Lightstrea
 
 ## Build
 
-To build your own version of `LS_rss_data_adapter.jar`, `LS_rss_data_adapter.jar`, and `LS_rss_metadata_adapter.jar`, instead of using the one provided in the `deploy.zip` file from the [Install](https://github.com/Weswit/Lightstreamer-example-RSS-adapter-java#install) section above, follow these steps.
+To build your own version of `LS_rss_data_adapter.jar`, `LS_rss_data_adapter.jar`, and `LS_rss_metadata_adapter.jar`, instead of using the one provided in the `deploy.zip` file from the [Install](https://github.com/Weswit/Lightstreamer-example-RSS-adapter-java#install) section above, follow these steps:
 
 * Download this project.
-* Get the `ls-adapter-interface.jar`.`ls-generic-adapters.jar`, and `log4j-1.2.15.jar` files from the [latest Lightstreamer distribution](http://www.lightstreamer.com/download), and copy them into the `lib` directory.
+* Get the `ls-adapter-interface.jar`,`ls-generic-adapters.jar`, and `log4j-1.2.15.jar` files from the [latest Lightstreamer distribution](http://www.lightstreamer.com/download), and copy them into the `lib` directory.
 * Get the `informa.jar` and `jdom.jar` files from the [News Aggregation Library for Java download](http://sourceforge.net/projects/informa/).
 * Get the `commons-logging.jar` file from [Apache commons](http://commons.apache.org/proper/commons-logging/download_logging.cgi).
 * Create the jars `LS_rss_metadata_adapter.jar`, `LS_rss_data_adapter.jar`, and `LS_rss_data_adapter.jar` with commands like these:
