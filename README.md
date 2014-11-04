@@ -99,21 +99,22 @@ If you want to install a version of the *RSS News Demo* in your local Lightstrea
 To build your own version of `LS_rss_data_adapter.jar`, `LS_rss_data_adapter.jar`, and `LS_rss_metadata_adapter.jar`, instead of using the one provided in the `deploy.zip` file from the [Install](https://github.com/Weswit/Lightstreamer-example-RSS-adapter-java#install) section above, follow these steps:
 
 * Download this project.
-* Get the `ls-adapter-interface.jar` and `log4j-1.2.15.jar` files from the [latest Lightstreamer distribution](http://www.lightstreamer.com/download), and copy them into the `lib` directory.
-* Get the `informa.jar` and `jdom.jar` files from the [News Aggregation Library for Java download](http://sourceforge.net/projects/informa/).
-* Get the `commons-logging.jar` file from [Apache commons](http://commons.apache.org/proper/commons-logging/download_logging.cgi).
+* Get the `ls-adapter-interface.jar` file from the [latest Lightstreamer distribution](http://www.lightstreamer.com/download), and copy it into the `lib` folder.
+* Get the `log4j-1.2.17.jar` file from [Apache log4j](https://logging.apache.org/log4j/1.2/) and copy it into the `lib` folder.
+* Get the `informa.jar` and `jdom.jar` files from the [News Aggregation Library for Java download](http://sourceforge.net/projects/informa/), and copy it into the `lib` folder.
+* Get the `commons-logging.jar` file from [Apache commons](http://commons.apache.org/proper/commons-logging/download_logging.cgi), and copy it into the `lib` folder.
 * Create the jars `LS_rss_metadata_adapter.jar`, `LS_rss_data_adapter.jar`, and `LS_rss_data_adapter.jar` with commands like these:
 
 ```sh
- >javac -source 1.7 -target 1.7 -nowarn -g -classpath lib/log4j-1.2.15.jar;lib/ls-adapter-interface/ls-adapter-interface.jar;lib/informa.jar;lib/jdom.jar -sourcepath src/src_feed -d tmp_classes src/src_feed/rss_demo/rss_reader/RSSReaderProvider.java
+ >javac -source 1.7 -target 1.7 -nowarn -g -classpath lib/log4j-1.2.17.jar;lib/ls-adapter-interface/ls-adapter-interface.jar;lib/informa.jar;lib/jdom.jar -sourcepath src/src_feed -d tmp_classes src/src_feed/rss_demo/rss_reader/RSSReaderProvider.java
 
  >jar cvf LS_rss_data_adapter.jar -C tmp_classes src_feed
 
- >javac -source 1.7 -target 1.7 -nowarn -g -classpath lib/log4j-1.2.15.jar;lib/ls-adapter-interface/ls-adapter-interface.jar;LS_rss_reader.jar -sourcepath src/src_adapter -d tmp_classes src/src_adapter/rss_demo/adapters/RSSDataAdapter.java
+ >javac -source 1.7 -target 1.7 -nowarn -g -classpath lib/log4j-1.2.17.jar;lib/ls-adapter-interface/ls-adapter-interface.jar;LS_rss_reader.jar -sourcepath src/src_adapter -d tmp_classes src/src_adapter/rss_demo/adapters/RSSDataAdapter.java
 
  >jar cvf LS_rss_data_adapter.jar -C tmp_classes src_adapter
  
- >javac -source 1.7 -target 1.7 -nowarn -g -classpath lib/log4j-1.2.15.jar;lib/ls-adapter-interface/ls-adapter-interface.jar;LS_rss_data_adapter.jar -sourcepath src/src_metadata -d tmp_classes src/src_metadata/rss_demo/adapters/RSSMetadataAdapter.java
+ >javac -source 1.7 -target 1.7 -nowarn -g -classpath lib/log4j-1.2.17.jar;lib/ls-adapter-interface/ls-adapter-interface.jar;LS_rss_data_adapter.jar -sourcepath src/src_metadata -d tmp_classes src/src_metadata/rss_demo/adapters/RSSMetadataAdapter.java
  
  >jar cvf LS_rss_metadata_adapter.jar -C tmp_classes src_metadata
 ```
