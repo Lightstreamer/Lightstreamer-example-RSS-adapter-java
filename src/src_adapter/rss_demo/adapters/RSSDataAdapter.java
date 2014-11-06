@@ -526,6 +526,24 @@ public class RSSDataAdapter
     }
 
     /**
+     * Method clearSnapshot.
+     *
+     * @param  itemName  ...
+     */
+    public void clearSnapshot(String itemName) {
+        lostCompatibility();
+    }
+
+    /**
+     * Method smartClearSnapshot.
+     *
+     * @param  arg0  ...
+     */
+    public void smartClearSnapshot(Object arg0) {
+        lostCompatibility();
+    }
+
+    /**
      * Method failure.
      *
      * @param  arg0  ...
