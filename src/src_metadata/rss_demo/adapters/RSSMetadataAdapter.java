@@ -59,7 +59,7 @@ public class RSSMetadataAdapter extends LiteralBasedProvider{
     public void init(Map params, File configDir) throws MetadataProviderException {
         //Call super's init method to handle basic Metadata Adapter features
         super.init(params,configDir);
-
+        
         String logConfig = (String) params.get("log_config");
         if (logConfig != null) {
             File logConfigFile = new File(configDir, logConfig);
@@ -70,6 +70,7 @@ public class RSSMetadataAdapter extends LiteralBasedProvider{
                 DOMConfigurator.configure(logConfigFile.getAbsolutePath());
             }
         }
+
         logger = Logger.getLogger("LS_demos_Logger.NewsAggregator.adapter");
 
         // Read the Adapter Set name, which is supplied by the Server as a parameter
