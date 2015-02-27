@@ -39,28 +39,36 @@ The `adapters.xml` file for the *RSS News Demo*, should look like:
   <!-- Mandatory. Define an Adapter Set and sets its unique ID. -->
   <adapters_conf id="RSSDEMO">
 
-  <metadata_provider>
-    <adapter_class>rss_demo.adapters.RSSMetadataAdapter</adapter_class>
-    <!-- <param name="search_dir">.</param> 
-    <param name="max_bandwidth">500</param>
-    <param name="max_frequency">0</param>
-    <param name="buffer_size">0</param> -->
+    <!--
+      Not all configuration options of an Adapter Set are exposed by this file.
+      You can easily expand your configurations using the generic template,
+      `DOCS-SDKs/sdk_adapter_java_inprocess/doc/adapter_conf_template/adapters.xml`,
+      as a reference.
+    -->
 
-    <param name="item_family_1">rss_items_.*</param>
-    <param name="modes_for_item_family_1">DISTINCT</param>
-    <param name="item_family_2">rss_info_.*</param>
-    <param name="modes_for_item_family_2">COMMAND</param>
+    <metadata_adapter_initialised_first>Y</metadata_adapter_initialised_first>
 
-    <param name="log_config">adapters_log_conf.xml</param>
-    <param name="log_config_refresh_seconds">10</param>
-  </metadata_provider>
+    <metadata_provider>
+      <adapter_class>rss_demo.adapters.RSSMetadataAdapter</adapter_class>
 
-  <data_provider name="RSS_ADAPTER">
-    <adapter_class>rss_demo.adapters.RSSDataAdapter</adapter_class>
-    <param name="config_file">rss_reader_conf.txt</param>
-    
-    <param name="log_config">adapters_log_conf.xml</param>
-  </data_provider>
+      <!-- <param name="search_dir">.</param> 
+      <param name="max_bandwidth">500</param>
+      <param name="max_frequency">0</param>
+      <param name="buffer_size">0</param> -->
+
+      <param name="item_family_1">rss_items_.*</param>
+      <param name="modes_for_item_family_1">DISTINCT</param>
+      <param name="item_family_2">rss_info_.*</param>
+      <param name="modes_for_item_family_2">COMMAND</param>
+
+      <param name="log_config">adapters_log_conf.xml</param>
+      <param name="log_config_refresh_seconds">10</param>
+    </metadata_provider>
+
+    <data_provider name="RSS_ADAPTER">
+      <adapter_class>rss_demo.adapters.RSSDataAdapter</adapter_class>
+      <param name="config_file">rss_reader_conf.txt</param>
+    </data_provider>
 
   </adapters_conf>
 ```
