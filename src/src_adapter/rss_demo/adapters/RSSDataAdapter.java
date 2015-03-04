@@ -98,6 +98,11 @@ public class RSSDataAdapter
      */
     public void init(Map params, File configDir) throws DataProviderException {
         
+        // Logging configuration for the demo is carried out in the init
+        // method of Metadata Adapter. In order to be sure that this method 
+        // is executed after log configuration was completed, this parameter 
+        // must be present in the Adapter Set configuration (adapters.xml):
+        // <metadata_adapter_initialised_first>Y</metadata_adapter_initialised_first>
         logger = Logger.getLogger("LS_demos_Logger.NewsAggregator.adapter");
 
         // Read the Adapter Set name, which is supplied by the Server as a parameter
