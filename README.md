@@ -2,7 +2,7 @@
 
 <!-- START DESCRIPTION lightstreamer-example-rss-adapter-java -->
 
-This project shows the RSS Demo Data and Metadata Adapters and how they can be plugged into Lightstreamer Server and used to feed the [Lightstreamer - RSS News Demo - HTML Client](https://github.com/Weswit/Lightstreamer-example-RSS-client-javascript) front-end.<br>
+This project shows the RSS Demo Data and Metadata Adapters and how they can be plugged into Lightstreamer Server and used to feed the [Lightstreamer - RSS News Demo - HTML Client](https://github.com/Lightstreamer/Lightstreamer-example-RSS-client-javascript) front-end.<br>
 The *RSS News Demo* is a simple news aggregator application based on Lightstreamer.
 
 ## Details
@@ -103,13 +103,13 @@ If you want to install a version of the *RSS News Demo* in your local Lightstrea
 
 * Download *Lightstreamer Server* (Lightstreamer Server comes with a free non-expiring demo license for 20 connected users) from [Lightstreamer Download page](http://www.lightstreamer.com/download.htm), and install it, as explained in the `GETTING_STARTED.TXT` file in the installation home directory.
 * Make sure that Lightstreamer Server is not running.
-* Get the `deploy.zip` file of the [latest release](https://github.com/Weswit/Lightstreamer-example-RSS-adapter-java/releases), unzip it, and copy the `RSS` folder into the `adapters` folder of your Lightstreamer Server installation.
+* Get the `deploy.zip` file of the [latest release](https://github.com/Lightstreamer/Lightstreamer-example-RSS-adapter-java/releases), unzip it, and copy the `RSS` folder into the `adapters` folder of your Lightstreamer Server installation.
 * Launch Lightstreamer Server.
-* Test the Adapter, launching the [Lightstreamer - RSS News Demo - HTML Client](https://github.com/Weswit/Lightstreamer-example-RSS-client-javascript) listed in [Clients Using This Adapter](https://github.com/Weswit/Lightstreamer-example-RSS-adapter-java#client-using-this-adapter).
+* Test the Adapter, launching the [Lightstreamer - RSS News Demo - HTML Client](https://github.com/Lightstreamer/Lightstreamer-example-RSS-client-javascript) listed in [Clients Using This Adapter](https://github.com/Lightstreamer/Lightstreamer-example-RSS-adapter-java#client-using-this-adapter).
 
 ## Build
 
-To build your own version of `LS_rss_data_adapter.jar`, `LS_rss_data_adapter.jar`, and `LS_rss_metadata_adapter.jar`, instead of using the one provided in the `deploy.zip` file from the [Install](https://github.com/Weswit/Lightstreamer-example-RSS-adapter-java#install) section above, follow these steps:
+To build your own version of `LS_rss_data_adapter.jar`, `LS_rss_data_adapter.jar`, and `LS_rss_metadata_adapter.jar`, instead of using the one provided in the `deploy.zip` file from the [Install](https://github.com/Lightstreamer/Lightstreamer-example-RSS-adapter-java#install) section above, follow these steps:
 
 * Download this project.
 * Get the `ls-adapter-interface.jar` file from the [latest Lightstreamer distribution](http://www.lightstreamer.com/download), and copy it into the `lib` folder.
@@ -137,15 +137,15 @@ To build your own version of `LS_rss_data_adapter.jar`, `LS_rss_data_adapter.jar
 ### Client Using This Adapter
 <!-- START RELATED_ENTRIES -->
 
-* [Lightstreamer - RSS News Demo - HTML Client](https://github.com/Weswit/Lightstreamer-example-RSS-client-javascript)
+* [Lightstreamer - RSS News Demo - HTML Client](https://github.com/Lightstreamer/Lightstreamer-example-RSS-client-javascript)
 
 <!-- END RELATED_ENTRIES -->
 
 ### Related Projects
 
-* [Lightstreamer - Reusable Metadata Adapters - Java Adapter](https://github.com/Weswit/Lightstreamer-example-ReusableMetadata-adapter-java)
+* [Lightstreamer - Reusable Metadata Adapters - Java Adapter](https://github.com/Lightstreamer/Lightstreamer-example-ReusableMetadata-adapter-java)
 
 ## Lightstreamer Compatibility Notes
 
 * Compatible with Lightstreamer SDK for Java In-Process Adapters since 6.0
-- For a version of this example compatible with Lightstreamer SDK for Java Adapters version 5.1, please refer to [this tag](https://github.com/Weswit/Lightstreamer-example-RSS-adapter-java/tree/for_Lightstreamer_5.1).
+- For a version of this example compatible with Lightstreamer SDK for Java Adapters version 5.1, please refer to [this tag](https://github.com/Lightstreamer/Lightstreamer-example-RSS-adapter-java/tree/for_Lightstreamer_5.1).
