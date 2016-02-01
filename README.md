@@ -119,17 +119,13 @@ To build your own version of `LS_rss_reader.jar`, `LS_rss_data_adapter.jar`, and
 * Create the jars `LS_rss_reader.jar`, `LS_rss_data_adapter.jar`, and `LS_rss_metadata_adapter.jar` with commands like these:
 
 ```sh
- >javac -source 1.7 -target 1.7 -nowarn -g -classpath lib/log4j-1.2.17.jar;lib/ls-adapter-interface/ls-adapter-interface.jar;lib/informa.jar;lib/jdom.jar -sourcepath src/src_feed -d tmp_classes/feed src/src_feed/rss_demo/rss_reader/RSSReaderProvider.java
-
- >jar cvf LS_rss_reader.jar -C tmp_classes/feed .
-
- >javac -source 1.7 -target 1.7 -nowarn -g -classpath lib/log4j-1.2.17.jar;lib/ls-adapter-interface/ls-adapter-interface.jar;LS_rss_reader.jar -sourcepath src/src_adapter -d tmp_classes/adapter src/src_adapter/rss_demo/adapters/RSSDataAdapter.java
-
- >jar cvf LS_rss_data_adapter.jar -C tmp_classes/adapter .
- 
- >javac -source 1.7 -target 1.7 -nowarn -g -classpath lib/log4j-1.2.17.jar;lib/ls-adapter-interface/ls-adapter-interface.jar;LS_rss_data_adapter.jar -sourcepath src/src_metadata -d tmp_classes/metadata src/src_metadata/rss_demo/adapters/RSSMetadataAdapter.java
- 
- >jar cvf LS_rss_metadata_adapter.jar -C tmp_classes/metadata .
+ > mkdir tmp_classes/feed tmp_classes/adapter tmp_classes/metadata
+ > javac -source 1.7 -target 1.7 -nowarn -g -classpath lib/log4j-1.2.17.jar;lib/ls-adapter-interface.jar;lib/informa.jar;lib/jdom.jar -sourcepath src/src_feed -d tmp_classes/feed src/src_feed/rss_demo/rss_reader/RSSReaderProvider.java
+ > jar cvf LS_rss_reader.jar -C tmp_classes/feed .
+ > javac -source 1.7 -target 1.7 -nowarn -g -classpath lib/log4j-1.2.17.jar;lib/ls-adapter-interface.jar;LS_rss_reader.jar -sourcepath src/src_adapter -d tmp_classes/adapter src/src_adapter/rss_demo/adapters/RSSDataAdapter.java
+ > jar cvf LS_rss_data_adapter.jar -C tmp_classes/adapter .
+ > javac -source 1.7 -target 1.7 -nowarn -g -classpath lib/log4j-1.2.17.jar;lib/ls-adapter-interface.jar;LS_rss_data_adapter.jar -sourcepath src/src_metadata -d tmp_classes/metadata src/src_metadata/rss_demo/adapters/RSSMetadataAdapter.java
+ > jar cvf LS_rss_metadata_adapter.jar -C tmp_classes/metadata .
 ```
 
 ## See Also
