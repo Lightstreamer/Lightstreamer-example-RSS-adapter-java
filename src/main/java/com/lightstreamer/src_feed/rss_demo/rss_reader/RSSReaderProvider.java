@@ -30,8 +30,9 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.Timer;
 
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.Level;
 
 import rss_demo.rss_reader.ThreadPool.PoolException;
 
@@ -71,8 +72,7 @@ public class RSSReaderProvider implements SmartDataProvider {
 
     private static final String tpIsInactive =
         "Rss Threads Pool is inactive. Please look your DataAdapter configuration";
-    private static Logger logger =
-        Logger.getLogger("LS_demos_Logger.NewsAggregator.feed");
+    private static Logger logger = LogManager.getLogger("LS_demos_Logger.NewsAggregator.feed");
 
     /**
      * Constructor DemoDataProvider.

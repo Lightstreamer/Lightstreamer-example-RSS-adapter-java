@@ -26,8 +26,9 @@ import java.util.Collection;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.Level;
 
 import com.lightstreamer.interfaces.data.IndexedItemEvent;
 
@@ -99,8 +100,7 @@ class RssProducer extends Thread {
     private String theError;
     private int maxBytes;
     private boolean dontRead;
-    private static Logger logger =
-        Logger.getLogger("LS_demos_Logger.NewsAggregator.feed");
+    private static Logger logger = LogManager.getLogger("LS_demos_Logger.NewsAggregator.feed");
     private boolean isActive;
     private boolean push = false;
 

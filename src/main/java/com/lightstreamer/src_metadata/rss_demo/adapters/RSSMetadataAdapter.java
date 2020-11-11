@@ -21,9 +21,8 @@ package rss_demo.adapters;
 import java.io.File;
 import java.util.Map;
 
-import org.apache.log4j.Logger;
-import org.apache.log4j.xml.DOMConfigurator;
-
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import com.lightstreamer.adapters.metadata.LiteralBasedProvider;
 import com.lightstreamer.interfaces.metadata.CreditsException;
@@ -60,18 +59,7 @@ public class RSSMetadataAdapter extends LiteralBasedProvider{
         //Call super's init method to handle basic Metadata Adapter features
         super.init(params,configDir);
         
-        String logConfig = (String) params.get("log_config");
-        if (logConfig != null) {
-            File logConfigFile = new File(configDir, logConfig);
-            String logRefresh = (String) params.get("log_config_refresh_seconds");
-            if (logRefresh != null) {
-                DOMConfigurator.configureAndWatch(logConfigFile.getAbsolutePath(), Integer.parseInt(logRefresh) * 1000);
-            } else {
-                DOMConfigurator.configure(logConfigFile.getAbsolutePath());
-            }
-        }
-
-        logger = Logger.getLogger("LS_demos_Logger.NewsAggregator.adapter");
+        logger = LogManager.getLogger("LS_demos_Logger.NewsAggregator.adapter");
 
         // Read the Adapter Set name, which is supplied by the Server as a parameter
         this.adapterSetId = (String) params.get("adapters_conf.id");

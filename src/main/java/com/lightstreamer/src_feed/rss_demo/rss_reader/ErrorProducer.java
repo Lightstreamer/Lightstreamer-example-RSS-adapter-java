@@ -18,8 +18,9 @@
 
 package rss_demo.rss_reader;
 
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.Level;
 
 import com.lightstreamer.interfaces.data.IndexedItemEvent;
 
@@ -34,8 +35,7 @@ import com.lightstreamer.interfaces.data.IndexedItemEvent;
  */
 class ErrorProducer extends Thread {
 
-    private static Logger logger =
-        Logger.getLogger("LS_demos_Logger.NewsAggregator.feed");
+    private static Logger logger = LogManager.getLogger("LS_demos_Logger.NewsAggregator.feed");
     private final RSSReaderProvider provider;
     //riferimento al produttore di notizie (ne viene sfruttato il semaforo)
     private RssProducer myRif;

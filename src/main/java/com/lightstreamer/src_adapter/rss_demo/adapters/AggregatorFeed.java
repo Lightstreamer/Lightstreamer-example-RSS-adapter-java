@@ -22,9 +22,9 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Set;
 
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
-import org.apache.log4j.Priority;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.Level;
 
 import rss_demo.rss_reader.RSSReaderProvider;
 
@@ -41,8 +41,7 @@ import com.lightstreamer.interfaces.data.SubscriptionException;
  */
 
 public class AggregatorFeed {
-    private static Logger logger =
-        Logger.getLogger("LS_demos_Logger.NewsAggregator.adapter");
+    private static Logger logger = LogManager.getLogger("LS_demos_Logger.NewsAggregator.adapter");
 
     private String feed;
     private HashMap users = new HashMap();
@@ -255,7 +254,7 @@ public class AggregatorFeed {
         }
     }
 
-    private void feedLog(String mex, Priority level) {
+    private void feedLog(String mex, Level level) {
         logger.log(level, "|" + this.feed + "|" + mex);
     }
 

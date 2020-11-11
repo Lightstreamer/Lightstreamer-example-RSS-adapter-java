@@ -18,7 +18,8 @@
 
 package rss_demo.adapters;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Class AggregatorUserThread.
@@ -45,8 +46,7 @@ public class AggregatorUserThread extends Thread {
 
     private AggregatorFeed singleFeed = null;
 
-    private static Logger logger =
-        Logger.getLogger("LS_demos_Logger.NewsAggregator.adapter");
+    private static Logger logger = LogManager.getLogger("LS_demos_Logger.NewsAggregator.adapter");
 
     /**
      * Constructor AggregatorUserThread.
