@@ -89,7 +89,7 @@ Please refer [here](https://lightstreamer.com/docs/ls-server/latest/General%20Co
 
 If you want to install a version of the *RSS News Demo* in your local Lightstreamer Server, follow these steps:
 
-* Download *Lightstreamer Server* (Lightstreamer Server comes with a free non-expiring demo license for 20 connected users) from [Lightstreamer Download page](http://www.lightstreamer.com/download.htm), and install it, as explained in the `GETTING_STARTED.TXT` file in the installation home directory.
+* Download *Lightstreamer Server* (Lightstreamer Server comes with a free non-expiring demo license for 20 connected users) from [Lightstreamer Download page](https://lightstreamer.com/download/), and install it, as explained in the `GETTING_STARTED.TXT` file in the installation home directory.
 * Make sure that Lightstreamer Server is not running.
 * Get the `deploy.zip` file of the [latest release](https://github.com/Lightstreamer/Lightstreamer-example-RSS-adapter-java/releases), unzip it, and copy the `RSSDemo` folder into the `adapters` folder of your Lightstreamer Server installation.
 * [Optional] Customize the logging settings in log4j configuration file: `RSSDemo/classes/log4j2.xml`.
