@@ -34,33 +34,31 @@ This Adapter Set is configured and will be referenced by the clients as `RSSDEMO
 
 The `adapters.xml` file for the *RSS News Demo*, should look like:
 ```xml      
-  <?xml version="1.0"?>
+<?xml version="1.0"?>
+<adapters_conf id="RSSDEMO">
 
-  <!-- Mandatory. Define an Adapter Set and sets its unique ID. -->
-  <adapters_conf id="RSSDEMO">
+<metadata_adapter_initialised_first>Y</metadata_adapter_initialised_first>
 
-    <metadata_adapter_initialised_first>Y</metadata_adapter_initialised_first>
+<metadata_provider>
+  <adapter_class>rss_demo.adapters.RSSMetadataAdapter</adapter_class>
 
-    <metadata_provider>
-      <adapter_class>rss_demo.adapters.RSSMetadataAdapter</adapter_class>
+  <!-- <param name="search_dir">.</param> 
+  <param name="max_bandwidth">500</param>
+  <param name="max_frequency">0</param>
+  <param name="buffer_size">0</param> -->
 
-      <!-- <param name="search_dir">.</param> 
-      <param name="max_bandwidth">500</param>
-      <param name="max_frequency">0</param>
-      <param name="buffer_size">0</param> -->
+  <param name="item_family_1">rss_items_.*</param>
+  <param name="modes_for_item_family_1">DISTINCT</param>
+  <param name="item_family_2">rss_info_.*</param>
+  <param name="modes_for_item_family_2">COMMAND</param>
+</metadata_provider>
 
-      <param name="item_family_1">rss_items_.*</param>
-      <param name="modes_for_item_family_1">DISTINCT</param>
-      <param name="item_family_2">rss_info_.*</param>
-      <param name="modes_for_item_family_2">COMMAND</param>
-    </metadata_provider>
+<data_provider name="RSS_ADAPTER">
+  <adapter_class>rss_demo.adapters.RSSDataAdapter</adapter_class>
+  <param name="config_file">rss_reader_conf.txt</param>
+</data_provider>
 
-    <data_provider name="RSS_ADAPTER">
-      <adapter_class>rss_demo.adapters.RSSDataAdapter</adapter_class>
-      <param name="config_file">rss_reader_conf.txt</param>
-    </data_provider>
-
-  </adapters_conf>
+</adapters_conf>
 ```
 
 <i>NOTE: not all configuration options of an Adapter Set are exposed by the file suggested above. 
