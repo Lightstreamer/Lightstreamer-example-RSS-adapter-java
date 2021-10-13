@@ -36,7 +36,6 @@
           </execution>
         </executions>
       </plugin>
-         
     </plugins>
   </build>
 
@@ -46,7 +45,7 @@
       <name>GitHub Lightstreamer Apache Maven Packages</name>
       <url>https://maven.pkg.github.com/Lightstreamer/Lightstreamer-example-RSS-adapter-java</url>
     </repository>
-  </distributionManagement>  
+  </distributionManagement>
 
   <repositories>
     <repository>
@@ -73,7 +72,7 @@
       <artifactId>log4j-core</artifactId>
       <version>2.13.3</version>
     </dependency>
-	<!-- https://mvnrepository.com/artifact/jdom/jdom -->
+    <!-- https://mvnrepository.com/artifact/jdom/jdom -->
     <dependency>
       <groupId>jdom</groupId>
       <artifactId>jdom</artifactId>
