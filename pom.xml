@@ -2,13 +2,13 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>com.lightstreamer</groupId>
-  <artifactId>example-RSS-adapter-java</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
+  <groupId>com.lightstreamer.examples</groupId>
+  <artifactId>rss-adapter-java</artifactId>
+  <version>1.0.0</version>
   <packaging>jar</packaging>
 
-  <name>example-RSS-adapter-java</name>
-  <url>http://maven.apache.org</url>
+  <name>Lightstreamer RSS Demo Java Adapter</name>
+  <url>https://github.com/Lightstreamer/Lightstreamer-example-RSS-adapter-java</url>
 
   <properties>
     <maven.compiler.target>1.8</maven.compiler.target>
@@ -39,7 +39,15 @@
          
     </plugins>
   </build>
-  
+
+  <distributionManagement>
+    <repository>
+      <id>github</id>
+      <name>GitHub Lightstreamer Apache Maven Packages</name>
+      <url>https://maven.pkg.github.com/Lightstreamer/Lightstreamer-example-RSS-adapter-java</url>
+    </repository>
+  </distributionManagement>  
+
   <repositories>
     <repository>
       <id>Twitter</id>
