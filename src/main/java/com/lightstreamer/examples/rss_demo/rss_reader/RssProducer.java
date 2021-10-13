@@ -16,7 +16,7 @@
  *
  */
 
-package rss_demo.rss_reader;
+package com.lightstreamer.examples.rss_demo.rss_reader;
 
 import java.io.BufferedInputStream;
 import java.io.IOException;

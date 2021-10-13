@@ -16,7 +16,7 @@
  *
  */
 
-package rss_demo.rss_reader;
+package com.lightstreamer.examples.rss_demo.rss_reader;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

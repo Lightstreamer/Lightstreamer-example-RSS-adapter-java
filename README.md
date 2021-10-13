@@ -40,7 +40,7 @@ The `adapters.xml` file for the *RSS News Demo*, should look like:
 <metadata_adapter_initialised_first>Y</metadata_adapter_initialised_first>
 
 <metadata_provider>
-  <adapter_class>rss_demo.adapters.RSSMetadataAdapter</adapter_class>
+  <adapter_class>com.lightstreamer.examples.rss_demo.adapters.RSSMetadataAdapter</adapter_class>
 
   <!-- <param name="search_dir">.</param> 
   <param name="max_bandwidth">500</param>
@@ -54,7 +54,7 @@ The `adapters.xml` file for the *RSS News Demo*, should look like:
 </metadata_provider>
 
 <data_provider name="RSS_ADAPTER">
-  <adapter_class>rss_demo.adapters.RSSDataAdapter</adapter_class>
+  <adapter_class>com.lightstreamer.examples.rss_demo.adapters.RSSDataAdapter</adapter_class>
   <param name="config_file">rss_reader_conf.txt</param>
 </data_provider>
 

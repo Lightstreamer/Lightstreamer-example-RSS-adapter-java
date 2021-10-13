@@ -16,7 +16,7 @@
  *
  */
 
-package rss_demo.rss_reader;
+package com.lightstreamer.examples.rss_demo.rss_reader;
 
 //import it.soltec.mfi.bdr.msf.msf_adapter.MsfAdapter;
 //import it.soltec.mfi.log.LoggerInterface;

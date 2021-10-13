@@ -16,7 +16,7 @@
  *
  */
 
-package rss_demo.adapters;
+package com.lightstreamer.examples.rss_demo.adapters;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -26,7 +26,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.Level;
 
-import rss_demo.rss_reader.RSSReaderProvider;
+import com.lightstreamer.examples.rss_demo.rss_reader.RSSReaderProvider;
 
 import com.lightstreamer.interfaces.data.IndexedItemEvent;
 import com.lightstreamer.interfaces.data.SubscriptionException;

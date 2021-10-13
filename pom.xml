@@ -35,9 +35,6 @@
             </goals>
           </execution>
         </executions>
-        <configuration>
-          <mainClass>rss_demo.adapters.RSSMetadataAdapter</mainClass>
-        </configuration>
       </plugin>
          
     </plugins>

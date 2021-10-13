@@ -16,7 +16,7 @@
  *
  */
 
-package rss_demo.adapters;
+package com.lightstreamer.examples.rss_demo.adapters;
 
 import java.io.File;
 import java.util.HashMap;
@@ -26,7 +26,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import rss_demo.rss_reader.RSSReaderProvider;
+import com.lightstreamer.examples.rss_demo.rss_reader.RSSReaderProvider;
 
 import com.lightstreamer.interfaces.data.DataProviderException;
 import com.lightstreamer.interfaces.data.FailureException;

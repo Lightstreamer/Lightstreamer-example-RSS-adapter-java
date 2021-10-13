@@ -16,7 +16,7 @@
  *
  */
 
-package rss_demo.adapters;
+package com.lightstreamer.examples.rss_demo.adapters;
 
 import java.io.File;
 import java.util.Map;
