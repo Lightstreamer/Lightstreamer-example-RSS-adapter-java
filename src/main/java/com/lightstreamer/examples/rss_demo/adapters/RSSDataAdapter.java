@@ -29,6 +29,7 @@ import org.apache.logging.log4j.Logger;
 import com.lightstreamer.examples.rss_demo.rss_reader.RSSReaderProvider;
 
 import com.lightstreamer.interfaces.data.DataProviderException;
+import com.lightstreamer.interfaces.data.DiffAlgorithm;
 import com.lightstreamer.interfaces.data.FailureException;
 import com.lightstreamer.interfaces.data.IndexedItemEvent;
 import com.lightstreamer.interfaces.data.ItemEvent;
@@ -518,6 +519,14 @@ public class RSSDataAdapter
      * @param  arg0  ...
      */
     public void smartEndOfSnapshot(Object arg0) {
+        lostCompatibility();
+    }
+
+    public void declareFieldDiffOrder(String itemName, Map<String, DiffAlgorithm[]> algorithmsMap) {
+        lostCompatibility();
+    }
+
+    public void smartDeclareFieldDiffOrder(Object itemHandle, Map<String, DiffAlgorithm[]> algorithmsMap) {
         lostCompatibility();
     }
 

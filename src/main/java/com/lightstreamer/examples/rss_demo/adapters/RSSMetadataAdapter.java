@@ -75,8 +75,8 @@ public class RSSMetadataAdapter extends LiteralBasedProvider{
         logger.info("RSSMetadataAdapter ready");
     }
     
-    public String[] getItems(String user, String session, String id) throws ItemsException {
-      String[] broken = super.getItems(user, session, id);
+    public String[] getItems(String user, String session, String id, String dataAdapter) throws ItemsException {
+      String[] broken = super.getItems(user, session, id, dataAdapter);
       for (int i = 0; i < broken.length; i++) {
           broken[i] = convertRSSUserName(broken[i],session);
       }
