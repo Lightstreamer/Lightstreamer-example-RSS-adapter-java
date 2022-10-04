@@ -4,7 +4,7 @@
 
   <groupId>com.lightstreamer.examples</groupId>
   <artifactId>rss-adapter-java</artifactId>
-  <version>1.0.0</version>
+  <version>1.0.1</version>
   <packaging>jar</packaging>
 
   <name>Lightstreamer RSS Demo Java Adapter</name>
@@ -65,7 +65,7 @@
     <dependency>
       <groupId>com.lightstreamer</groupId>
       <artifactId>ls-adapter-inprocess</artifactId>
-      <version>7.3.0</version>
+      <version>7.3.1</version>
     </dependency>
     <dependency>
       <groupId>org.apache.logging.log4j</groupId>
