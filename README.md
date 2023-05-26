@@ -62,9 +62,9 @@ The `adapters.xml` file for the *RSS News Demo*, should look like:
 ```
 
 <i>NOTE: not all configuration options of an Adapter Set are exposed by the file suggested above. 
-You can easily expand your configurations using the generic template, see the [Java In-Process Adapter Interface Project](https://github.com/Lightstreamer/Lightstreamer-lib-adapter-java-inprocess#configuration) for details.</i><br>
+You can easily expand your configurations using the generic template, see the [Java In-Process Adapter Interface Project](https://github.com/Lightstreamer/Lightstreamer-lib-adapter-java-inprocess/tree/v7.4.1#configuration) for details.</i><br>
 <br>
-Please refer [here](https://lightstreamer.com/docs/ls-server/latest/General%20Concepts.pdf) for more details about Lightstreamer Adapters.
+Please refer [here](https://lightstreamer.com/docs/ls-server/latest_7_3/General%20Concepts.pdf) for more details about Lightstreamer Adapters.
 
 #### RSS Reader Configuration
 
@@ -82,7 +82,7 @@ minNumRunningThreads = 3
 #proxyPort = 3128
 ```
 
-Please refer [here](https://lightstreamer.com/docs/ls-server/latest/General%20Concepts.pdf) for more details about Lightstreamer Adapters.<br>
+Please refer [here](https://lightstreamer.com/docs/ls-server/latest_7_3/General%20Concepts.pdf) for more details about Lightstreamer Adapters.<br>
 
 
 ## Install
@@ -91,7 +91,7 @@ If you want to install a version of the *RSS News Demo* in your local Lightstrea
 
 * Download *Lightstreamer Server* (Lightstreamer Server comes with a free non-expiring demo license for 20 connected users) from [Lightstreamer Download page](https://lightstreamer.com/download/), and install it, as explained in the `GETTING_STARTED.TXT` file in the installation home directory.
 * Make sure that Lightstreamer Server is not running.
-* Get the `deploy.zip` file of the [latest release](https://github.com/Lightstreamer/Lightstreamer-example-RSS-adapter-java/releases), unzip it, and copy the `RSSDemo` folder into the `adapters` folder of your Lightstreamer Server installation.
+* Get the `deploy.zip` file of the ["Release for Lightstreamer 7.3" release](https://github.com/Lightstreamer/Lightstreamer-example-RSS-adapter-java/releases), unzip it, and copy the `RSSDemo` folder into the `adapters` folder of your Lightstreamer Server installation.
 * [Optional] Customize the logging settings in log4j configuration file: `RSSDemo/classes/log4j2.xml`.
 * Launch Lightstreamer Server.
 * Test the Adapter, launching the [Lightstreamer - RSS News Demo - HTML Client](https://github.com/Lightstreamer/Lightstreamer-example-RSS-client-javascript) listed in [Clients Using This Adapter](#client-using-this-adapter).
@@ -126,7 +126,7 @@ Assuming Maven is installed and available in your path you can build the demo by
 
 ## Lightstreamer Compatibility Notes
 
-- Compatible with Lightstreamer SDK for Java In-Process Adapters since version 7.4.0.
+- Compatible with Lightstreamer SDK for Java In-Process Adapters version 7.4.x.
 - For a version of this example compatible with Lightstreamer SDK for Java Adapters versions 7.0 to 7.3, please refer to [this tag](https://github.com/Lightstreamer/Lightstreamer-example-RSS-adapter-java/tree/last_for_interface_7.3.x).
 - For a version of this example compatible with Lightstreamer SDK for Java Adapters version 6.0, please refer to [this tag](https://github.com/Lightstreamer/Lightstreamer-example-RSS-adapter-java/tree/pre_mvn).
 - For a version of this example compatible with Lightstreamer SDK for Java Adapters version 5.1, please refer to [this tag](https://github.com/Lightstreamer/Lightstreamer-example-RSS-adapter-java/tree/for_Lightstreamer_5.1).
