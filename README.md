@@ -94,11 +94,11 @@ If you want to install a version of the *RSS News Demo* in your local Lightstrea
 * Get the `deploy.zip` file of the [latest release](https://github.com/Lightstreamer/Lightstreamer-example-RSS-adapter-java/releases), unzip it, and copy the `RSSDemo` folder into the `adapters` folder of your Lightstreamer Server installation.
 * [Optional] Customize the logging settings in log4j configuration file: `RSSDemo/classes/log4j2.xml`.
 * Launch Lightstreamer Server.
-* Test the Adapter, launching the [Lightstreamer - RSS News Demo - HTML Client](https://github.com/Lightstreamer/Lightstreamer-example-RSS-client-javascript) listed in [Clients Using This Adapter](https://github.com/Lightstreamer/Lightstreamer-example-RSS-adapter-java#client-using-this-adapter).
+* Test the Adapter, launching the [Lightstreamer - RSS News Demo - HTML Client](https://github.com/Lightstreamer/Lightstreamer-example-RSS-client-javascript) listed in [Clients Using This Adapter](#client-using-this-adapter).
 
 ## Build
 
-To build your own version of `rss-adapter-java-x.y.z.jar` instead of using the one provided in the `deploy.zip` file from the [Install](https://github.com/Lightstreamer/Lightstreamer-example-RSS-adapter-java#install) section above, you have two options:
+To build your own version of `rss-adapter-java-x.y.z.jar` instead of using the one provided in the `deploy.zip` file from the [Install](#install) section above, you have two options:
 either use [Maven](https://maven.apache.org/) (or other build tools) to take care of dependencies and building (recommended) or gather the necessary jars yourself and build it manually.
 For the sake of simplicity only the Maven case is detailed here.
 
