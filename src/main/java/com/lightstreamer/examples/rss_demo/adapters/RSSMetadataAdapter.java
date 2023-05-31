@@ -20,6 +20,8 @@ package com.lightstreamer.examples.rss_demo.adapters;
 
 import java.io.File;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionStage;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -98,8 +100,10 @@ public class RSSMetadataAdapter extends LiteralBasedProvider{
      * Triggered by a client "sendMessage" call.
      * The message encodes a chat message from the client.
      */
-    public void notifyUserMessage(String user, String session, String message)
+    public CompletionStage<String> notifyUserMessage(String user, String session, String message)
         throws NotificationException, CreditsException {
+
+        // we won't introduce blocking operations, hence we can proceed inline
 
         if (message == null) {
             logger.warn("Null message received");
@@ -114,6 +118,8 @@ public class RSSMetadataAdapter extends LiteralBasedProvider{
 
         this.loadRSSFeed();
         this.handleRSSMessage(pieces,message,session);
+
+        return CompletableFuture.completedStage(null);
     }
     
     private void loadRSSFeed() throws CreditsException {
