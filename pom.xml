@@ -47,14 +47,6 @@
     </repository>
   </distributionManagement>
 
-  <repositories>
-    <repository>
-      <id>Twitter</id>
-      <name>Twitter repository</name>
-      <url>https://maven.twttr.com/</url>
-    </repository>
-  </repositories>
-
   <dependencies>
     <dependency>
       <groupId>junit</groupId>
