@@ -119,7 +119,7 @@ public class RSSMetadataAdapter extends LiteralBasedProvider{
         this.loadRSSFeed();
         this.handleRSSMessage(pieces,message,session);
 
-        return CompletableFuture.completedStage(null);
+        return CompletableFuture.completedFuture(null);
     }
     
     private void loadRSSFeed() throws CreditsException {
