@@ -19,7 +19,7 @@ Contains the source code for the RSS Data Adapter that polls all the feeds curre
 
 #### Metadata Adapter
 
-Contains the source code for a Metadata Adapter to be associated with the RSS Demo Data Adapter. This Metadata Adapter inherits from LiteralBasedProvider. It coordinates, together with the Data Adapter, the association among items, users, and subscribed feed.
+Contains the source code for `RSSMetadataAdapter`, a Metadata Adapter that implements `MetadataAdapter` directly and coordinates, together with the Data Adapter, the association among items, users, and subscribed feed.
  
 #### RSS Reader
  
@@ -42,15 +42,8 @@ The `adapters.xml` file for the *RSS News Demo*, should look like:
 <metadata_provider>
   <adapter_class>com.lightstreamer.examples.rss_demo.adapters.RSSMetadataAdapter</adapter_class>
 
-  <!-- <param name="search_dir">.</param> 
-  <param name="max_bandwidth">500</param>
-  <param name="max_frequency">0</param>
-  <param name="buffer_size">0</param> -->
-
-  <param name="item_family_1">rss_items_.*</param>
-  <param name="modes_for_item_family_1">DISTINCT</param>
-  <param name="item_family_2">rss_info_.*</param>
-  <param name="modes_for_item_family_2">COMMAND</param>
+  <!-- Ensure compatibility with old versions of the demo Clients. -->
+  <support_LiteralBased_subscriptions>Y</support_LiteralBased_subscriptions>
 </metadata_provider>
 
 <data_provider name="RSS_ADAPTER">
@@ -122,11 +115,10 @@ Assuming Maven is installed and available in your path you can build the demo by
 
 ### Related Projects
 
-* [LiteralBasedProvider Metadata Adapter](https://github.com/Lightstreamer/Lightstreamer-lib-adapter-java-inprocess#literalbasedprovider-metadata-adapter)
-
 ## Lightstreamer Compatibility Notes
 
-- Compatible with Lightstreamer SDK for Java In-Process Adapters since version 8.0.
+- Compatible with Lightstreamer SDK for Java In-Process Adapters since version 9.0.
+- For a version of this example compatible with Lightstreamer SDK for Java In-Process Adapters versions 8.x, please refer to [this tag](https://github.com/Lightstreamer/Lightstreamer-example-RSS-adapter-java/tree/XXXXXXXXXXXXXXXXXXXXX).
 - For a version of this example compatible with Lightstreamer SDK for Java Adapters versions 7.4.x, please refer to [this tag](https://github.com/Lightstreamer/Lightstreamer-example-RSS-adapter-java/tree/last_for_interface_7.4.x).
 - For a version of this example compatible with Lightstreamer SDK for Java Adapters versions 7.0 to 7.3, please refer to [this tag](https://github.com/Lightstreamer/Lightstreamer-example-RSS-adapter-java/tree/last_for_interface_7.3.x).
 - For a version of this example compatible with Lightstreamer SDK for Java Adapters version 6.0, please refer to [this tag](https://github.com/Lightstreamer/Lightstreamer-example-RSS-adapter-java/tree/pre_mvn).

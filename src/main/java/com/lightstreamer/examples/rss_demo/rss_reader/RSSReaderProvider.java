@@ -36,10 +36,8 @@ import org.apache.logging.log4j.Level;
 
 import com.lightstreamer.examples.rss_demo.rss_reader.ThreadPool.PoolException;
 
-import com.lightstreamer.interfaces.data.DataProviderException;
-import com.lightstreamer.interfaces.data.ItemEventListener;
-import com.lightstreamer.interfaces.data.SmartDataProvider;
-import com.lightstreamer.interfaces.data.SubscriptionException;
+import com.lightstreamer.adapter.common.InitException;
+import com.lightstreamer.adapter.data.SubscriptionException;
 
 /**
  * Class DemoDataProvider.
@@ -50,9 +48,9 @@ import com.lightstreamer.interfaces.data.SubscriptionException;
  * last modified:       $Modtime: 21/03/06 16:43 $
  * last check-in:       $Date: 21/03/06 16:44 $
  */
-public class RSSReaderProvider implements SmartDataProvider {
+public class RSSReaderProvider {
 
-    private ItemEventListener listener;
+    private RSSEventListener listener;
     private HashMap elements = null;
     private int wait4Info = 0;
     private int snapLength = 0;
@@ -90,10 +88,10 @@ public class RSSReaderProvider implements SmartDataProvider {
      * @param  configDir  ...
      * @throws DataProviderException
      */
-    public void init(Map params, File configDir) throws DataProviderException {
+    public void init(Map params, File configDir) throws InitException {
         String cfgName = (String) params.get("config_file");
         if (cfgName == null) {
-            throw new DataProviderException(
+            throw new InitException(
                 "Specify an RSS adapter configuration file!");
         }
         File configFile = new File(configDir, cfgName);
@@ -125,13 +123,13 @@ public class RSSReaderProvider implements SmartDataProvider {
                 "Fatal error reading configuration file (malformed number) of the RSS data adapter. Please check this file: "
                 + theURL.getPath();
             logger.log(Level.ERROR, fatalMex);
-            throw new DataProviderException(fatalMex);
+            throw new InitException(fatalMex);
 
         } catch (IOException e) {
             String fatalMex =
                 "Fatal error reading configuration file of the RSS data adapter. Please check that file";
             logger.log(Level.ERROR, fatalMex);
-            throw new DataProviderException(fatalMex);
+            throw new InitException(fatalMex);
         }
 
         // Initialization of threads pool.
@@ -145,7 +143,7 @@ public class RSSReaderProvider implements SmartDataProvider {
             String fatalMex =
                 "Cannot start the rssDataProvider, fails to create the thread pool";
             logger.log(Level.ERROR, fatalMex);
-            throw new DataProviderException(fatalMex);
+            throw new InitException(fatalMex);
         }
 
         Properties prop = System.getProperties();
@@ -184,21 +182,8 @@ public class RSSReaderProvider implements SmartDataProvider {
      *
      * @param  listener  ...
      */
-    public void setListener(ItemEventListener listener) {
+    public void setListener(RSSEventListener listener) {
         this.listener = listener;
-    }
-
-    /**
-     * Method subscribe.
-     *
-     * @param  itemName  ...
-     * @param  needsIterator  ...
-     * @throws SubscriptionException
-     */
-    public void subscribe(String itemName, boolean needsIterator)
-            throws SubscriptionException {
-        throw new SubscriptionException("never called");
-
     }
 
     /**
@@ -210,7 +195,7 @@ public class RSSReaderProvider implements SmartDataProvider {
      * @throws SubscriptionException
      */
     public synchronized void subscribe(
-            String itemName, Object itemKey, boolean needsIterator)
+            String itemName, String itemKey)
                 throws SubscriptionException {
         if (!started) {
             throw new SubscriptionException(tpIsInactive);
@@ -392,7 +377,7 @@ public class RSSReaderProvider implements SmartDataProvider {
     /**
      * @return Returns the listener.
      */
-    public ItemEventListener getListener() {
+    public RSSEventListener getListener() {
         return listener;
     }
 

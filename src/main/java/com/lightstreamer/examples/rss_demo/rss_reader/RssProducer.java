@@ -30,8 +30,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.Level;
 
-import com.lightstreamer.interfaces.data.IndexedItemEvent;
-
 import de.nava.informa.core.ChannelIF;
 import de.nava.informa.core.ItemIF;
 import de.nava.informa.core.ParseException;
@@ -86,7 +84,7 @@ class RssProducer extends Thread {
 
     static {
         for (int code = 0; code < names.length; code++) {
-            codes.put(names[code], new Integer(code));
+            codes.put(names[code], Integer.valueOf(code));
         }
     }
 
@@ -447,34 +445,7 @@ class RssProducer extends Thread {
 	
 	                final HashMap event = copyValues(newNews[j]);
 	
-	                this.provider.getListener().update(getURL(),
-	                                                   new IndexedItemEvent() {
-	                    public int getMaximumIndex() {
-	                        return names.length - 1;
-	                    }
-	
-	                    public int getIndex(String name) {
-	                        Object keyObject = codes.get(name);
-	                        if (keyObject == null) {
-	                            return -1;
-	                        } else {
-	                            return ((Integer) keyObject).intValue();
-	                        }
-	                    }
-	
-	                    public String getName(int index) {
-	                        if (event.get(names[index]) == null) {
-	                            return null;
-	                        } else {
-	                            return names[index];
-	                        }
-	                    }
-	
-	                    public Object getValue(int index) {
-	                        return event.get(names[index]);
-	                    }
-	
-	                }, isSnapshot);
+	                this.provider.getListener().update(getURL(), event);
 	
 	                logger.log(Level.DEBUG,
 	                           "INCOMING DATA --> RSS = " + getURL() + " event = "

@@ -21,23 +21,26 @@ package com.lightstreamer.examples.rss_demo.adapters;
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionStage;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.lightstreamer.examples.rss_demo.rss_reader.RSSReaderProvider;
+import com.lightstreamer.examples.rss_demo.rss_reader.RSSEventListener;
 
-import com.lightstreamer.interfaces.data.DataProviderException;
-import com.lightstreamer.interfaces.data.DiffAlgorithm;
-import com.lightstreamer.interfaces.data.FailureException;
-import com.lightstreamer.interfaces.data.IndexedItemEvent;
-import com.lightstreamer.interfaces.data.ItemEvent;
-import com.lightstreamer.interfaces.data.ItemEventListener;
-import com.lightstreamer.interfaces.data.OldItemEvent;
-import com.lightstreamer.interfaces.data.SmartDataProvider;
-import com.lightstreamer.interfaces.data.SubscriptionException;
-import com.lightstreamer.interfaces.metadata.ItemsException;
+import com.lightstreamer.adapter.common.InitException;
+import com.lightstreamer.adapter.common.Mode;
+import com.lightstreamer.adapter.data.DataAdapter;
+import com.lightstreamer.adapter.data.ItemListener;
+import com.lightstreamer.adapter.data.ItemManager;
+import com.lightstreamer.adapter.data.SubscriptionException;
+
+import com.lightstreamer.adapter.metadata.ItemsException;
 
 /**
  * Class RSSDataAdapter.
@@ -50,29 +53,21 @@ import com.lightstreamer.interfaces.metadata.ItemsException;
  */
 
 public class RSSDataAdapter
-        implements SmartDataProvider, ItemEventListener {
-	
-	/**
-     * A static map, to be used by the Metadata Adapter to find the data
-     * adapter instance; this allows the Metadata Adapter to forward client
-     * messages to the adapter.
-     * The map allows multiple instances of this Data Adapter to be included
-     * in different Adapter Sets. Each instance is identified with the name
-     * of the related Adapter Set; defining multiple instances in the same
-     * Adapter Set is not allowed.
-     */
-    public static final ConcurrentHashMap<String, RSSDataAdapter> feedMap =
-        new ConcurrentHashMap<String, RSSDataAdapter>();
-	
-    private static final String lostCompatibility =
-        "RSS Reader never call this callback. If happens something is changed on the RSS adapter and MUST change on the Aggregator";
+        implements DataAdapter {
 
-    public static String NEWS_ITEM_PREFIX = "rss_items_";
-    public static String CONTROL_ITEM_PREFIX = "rss_info_";
+    public static final String NEWS_ITEM_PREFIX = "rss_items_";
+    public static final String CONTROL_ITEM_PREFIX = "rss_info_";
 
     /** Field $objectName$. */
     public RSSReaderProvider RSSReader;
-    private ItemEventListener listener;
+    private final ConcurrentHashMap<String, ItemListener> itemListeners = new ConcurrentHashMap<>();
+    private final ExecutorService listenerPool = Executors.newSingleThreadExecutor();
+
+    /**
+     * Listener exposed to the RSSReaderProvider; receives callbacks
+     * from the RSS reader layer and routes them through the aggregation logic.
+     */
+    private final RSSEventListener readerListener = new ReaderListener();
 
     private HashMap feedsMap = new HashMap();
     private Object feedMapTraffic = new Object();
@@ -95,9 +90,9 @@ public class RSSDataAdapter
      *
      * @param  params  ...
      * @param  configDir  ...
-     * @throws DataProviderException
+     * @throws InitException
      */
-    public void init(Map params, File configDir) throws DataProviderException {
+    public void init(Map params, File configDir) throws InitException {
         
         // Logging configuration for the demo is carried out in the init
         // method of Metadata Adapter. In order to be sure that this method 
@@ -105,144 +100,24 @@ public class RSSDataAdapter
         // must be present in the Adapter Set configuration (adapters.xml):
         // <metadata_adapter_initialised_first>Y</metadata_adapter_initialised_first>
         logger = LogManager.getLogger("LS_demos_Logger.NewsAggregator.adapter");
-
-        // Read the Adapter Set name, which is supplied by the Server as a parameter
-        String adapterSetId = (String) params.get("adapters_conf.id");
-
-        // Put a reference to this instance on a static map
-        // to be read by the Metadata Adapter
-        feedMap.put(adapterSetId, this);
     	
     	
         RSSReader = new RSSReaderProvider();
-        RSSReader.setListener(this);
+        RSSReader.setListener(readerListener);
         RSSReader.init(params, configDir);
 
         logger.debug("RSS Reader inited");
     }
 
-    /**
-     * Method setListener.
-     *
-     * @param  listener  ...
-     */
-    public void setListener(ItemEventListener listener) {
-        this.listener = listener;
-        logger.debug("Listener set");
-    }
-
-    /**
-     * Method subscribe.
-     *
-     * @param  itemName  ...
-     * @param  needsIterator  ...
-     * @throws SubscriptionException
-     */
-    public void subscribe(String itemName, boolean needsIterator)
+    @Override
+    public CompletionStage<ItemManager> getItemManager(String itemName)
             throws SubscriptionException {
-        throw new SubscriptionException("never called");
-
+        return CompletableFuture.completedFuture(new RSSItemManager(itemName));
     }
 
-    /**
-     * Method subscribe.
-     *
-     * @param  itemName  ...
-     * @param  itemKey  ...
-     * @param  needsIterator  ...
-     * @throws SubscriptionException
-     */
-    public synchronized void subscribe(
-            String itemName, Object itemKey, boolean needsIterator)
-                throws SubscriptionException {
-
-        logger.debug("New item: " + itemName);
-
-        String userName = "";
-        boolean isFeed = false;
-        if (itemName.indexOf(CONTROL_ITEM_PREFIX) == 0) {
-            userName = itemName.substring(CONTROL_ITEM_PREFIX.length());
-            logger.debug("Subscribing control item for " + itemName);
-        } else if (itemName.indexOf(NEWS_ITEM_PREFIX) == 0) {
-            userName = itemName.substring(NEWS_ITEM_PREFIX.length());
-            isFeed = true;
-            logger.debug("Subscribing news item for: " + itemName);
-        } else {
-        	throw new SubscriptionException("Unexpected item name: " + itemName);
-        }
-
-        AggregatorUser thisUser = getUser(userName, true);
-
-        if (!isFeed) {
-        	thisUser.setControlSubscribed(true);
-            logger.debug("Control item OK: " + itemName);
-        } else {
-        	thisUser.setFeedSubscribed(true);
-            logger.debug("Feed item OK: " + itemName);
-        } 
-    }
-
-    /**
-     * Method unsubscribe.
-     *
-     * @param  itemName  ...
-     * @throws FailureException
-     * @throws SubscriptionException
-     */
-    public synchronized void unsubscribe(String itemName)
-            throws SubscriptionException, FailureException {
-
-        String userName = "";
-        boolean isFeed = false;
-        if (itemName.indexOf(CONTROL_ITEM_PREFIX) == 0) {
-            userName = itemName.substring(CONTROL_ITEM_PREFIX.length());
-            logger.debug("Control item (remove): " + itemName);
-
-        } else if (itemName.indexOf(NEWS_ITEM_PREFIX) == 0) {
-            userName = itemName.substring(NEWS_ITEM_PREFIX.length());
-            isFeed = true;
-            logger.debug("Feed item (remove): " + itemName);
-        } else {
-        	throw new SubscriptionException("Unexpected item name: " + itemName);
-        }
-
-        AggregatorUser thisUser = getUser(userName, false);
-
-        if (thisUser == null) {
-            logger.debug("->" + itemName + "<- User lost? | " + isFeed);
-            return;
-        } else {
-            if (!isFeed) {
-                thisUser.setControlSubscribed(false);
-                logger.debug("Control item (remove) OK: " + itemName);
-            } else {
-                thisUser.setFeedSubscribed(false);
-                logger.debug("Feed item (remove) OK: " + itemName);
-            }
-
-            if (!thisUser.isSomethingSubscribed()) {
-            	//we have to remove all the feeds subscribed by this user
-            	Object[] feeds = thisUser.getAllFeeds();
-            	for (int i=0; i<feeds.length; i++) {
-            		this.unsubscribeRSS((String)feeds[i], userName);
-            	}
-                this.removeUser(userName);
-                logger.debug("Removing user " + userName);
-            }
-        }
-
-    }
-
-    /**
-     * Method isSnapshotAvailable.
-     *
-     * @param  itemName  ...
-     * @return ...
-     * @throws SubscriptionException
-     */
-    public boolean isSnapshotAvailable(String itemName)
-            throws SubscriptionException {
-        return false;
+    @Override
+    public void shutdown() {
+        listenerPool.shutdown();
     }
 
     /**
@@ -306,11 +181,16 @@ public class RSSDataAdapter
     }
 
     /**
-     * Method getListener.
-     * @return ...
+     * Sends an update to the ItemListener associated with the given item name.
+     *
+     * @param  itemName  ...
+     * @param  data  ...
      */
-    public ItemEventListener getListener() {
-        return listener;
+    public void sendUpdate(String itemName, Map<String, String> data) {
+        ItemListener l = itemListeners.get(itemName);
+        if (l != null) {
+            listenerPool.execute(() -> l.update(data));
+        }
     }
 
 /////////////////////////////////////////////////////////////////////////////////////
@@ -383,395 +263,161 @@ public class RSSDataAdapter
         }
     }
 
-/////////////////////////////////////////////////////////////////////////////////////   
 
     /**
-     * Method update.
-     *
-     * @param  arg0  ...
-     * @param  arg1  ...
-     * @param  arg2  ...
+     * Inner class implementing ItemManager for each subscribed item.
      */
-    public void update(String arg0, ItemEvent arg1, boolean arg2) {
-        lostCompatibility();
-    }
+    private class RSSItemManager implements ItemManager {
+        private final String itemName;
+        private volatile ItemListener listener;
 
-    /**
-     * Method update.
-     *
-     * @param  arg0  ...
-     * @param  arg1  ...
-     * @param  arg2  ...
-     */
-    public void update(String arg0, OldItemEvent arg1, boolean arg2) {
-        lostCompatibility();
-    }
-
-    /**
-     * Method update.
-     *
-     * @param  arg0  ...
-     * @param  arg1  ...
-     * @param  arg2  ...
-     */
-    public void update(String arg0, Map arg1, boolean arg2) {
-        lostCompatibility();
-    }
-
-    /**
-     * Method update.
-     *
-     * @param  feed  ...
-     * @param  arg1  ...
-     * @param  arg2  ...
-     */
-    public void update(String feed, IndexedItemEvent arg1, boolean arg2) {
-        logger.debug("Update for " + feed);
-
-        AggregatorFeed thisFeed = getFeed(feed, false);
-        if (thisFeed == null) {
-            logger.debug("Feed not subscribed " + feed);
-            return;
-        }
-        thisFeed.updateFeed(arg1);
-    }
-
-    /**
-     * Method smartUpdate.
-     *
-     * @param  arg0  ...
-     * @param  arg1  ...
-     * @param  arg2  ...
-     */
-    public void smartUpdate(Object arg0, ItemEvent arg1, boolean arg2) {
-        lostCompatibility();
-    }
-
-    /**
-     * Method smartUpdate.
-     *
-     * @param  arg0  ...
-     * @param  arg1  ...
-     * @param  arg2  ...
-     */
-    public void smartUpdate(Object arg0, OldItemEvent arg1, boolean arg2) {
-        lostCompatibility();
-    }
-
-    /**
-     * Method smartUpdate.
-     *
-     * @param  arg0  ...
-     * @param  arg1  ...
-     * @param  arg2  ...
-     */
-    public void smartUpdate(Object arg0, Map arg1, boolean arg2) {
-        lostCompatibility();
-    }
-
-    /**
-     * Method smartUpdate.
-     *
-     * @param  arg0  ...
-     * @param  arg1  ...
-     * @param  arg2  ...
-     */
-    public void smartUpdate(Object arg0, IndexedItemEvent arg1, boolean arg2) {
-        String controlName = "";
-        try {
-            controlName = (String) arg0;
-        } catch (ClassCastException cce) {
-            logger.error("Unexpected update from RSSReader");
-        }
-        logger.debug("Update for " + controlName);
-
-        String feed = controlName.substring(9);
-        AggregatorFeed thisFeed = getFeed(feed, false);
-        if (thisFeed == null) {
-            logger.debug("Feed not subscribed " + feed);
-            return;
-        }
-        thisFeed.updateFeedStatus(arg1);
-    }
-
-    /**
-     * Method endOfSnapshot.
-     *
-     * @param  itemName  ...
-     */
-    public void endOfSnapshot(String itemName) {
-        if (itemName.indexOf("CONTROLLO") == 0) { //CONTROLLO is used in the wrapped RSS reader
-            return;
+        RSSItemManager(String itemName) {
+            this.itemName = itemName;
         }
 
-        logger.debug("EOS " + itemName);
-        AggregatorFeed thisFeed = getFeed(itemName, false);
-        if (thisFeed == null) {
-            logger.debug("Feed not subscribed " + itemName);
-            return;
-        }
-        thisFeed.endOfSnapshot();
-    }
-
-    /**
-     * Method smartEndOfSnapshot.
-     *
-     * @param  arg0  ...
-     */
-    public void smartEndOfSnapshot(Object arg0) {
-        lostCompatibility();
-    }
-
-    public void declareFieldDiffOrder(String itemName, Map<String, DiffAlgorithm[]> algorithmsMap) {
-        lostCompatibility();
-    }
-
-    public void smartDeclareFieldDiffOrder(Object itemHandle, Map<String, DiffAlgorithm[]> algorithmsMap) {
-        lostCompatibility();
-    }
-
-    /**
-     * Method clearSnapshot.
-     *
-     * @param  itemName  ...
-     */
-    public void clearSnapshot(String itemName) {
-        lostCompatibility();
-    }
-
-    /**
-     * Method smartClearSnapshot.
-     *
-     * @param  arg0  ...
-     */
-    public void smartClearSnapshot(Object arg0) {
-        lostCompatibility();
-    }
-
-    /**
-     * Method failure.
-     *
-     * @param  arg0  ...
-     */
-    public void failure(Throwable arg0) {
-        logger.error("FAILURE: " + arg0.getMessage());
-        return;
-    }
-
-//////////////////////////////////////////////////////////////////
-
-    /**
-     * Method lostCompatibility.
-     */
-    public void lostCompatibility() {
-        logger.info(lostCompatibility);
-        logger.error(lostCompatibility);
-    }
-
-/////Non sapevo dove metterli!!!
-
-    /**
-     * Method cloneEvent.
-     *
-     * @param  event  ...
-     * @return ...
-     */
-    public static IndexedItemEvent cloneEvent(IndexedItemEvent event) {
-        return new ClonedEvent(event);
-    }
-
-    /**
-     * Class ClonedEvent.
-     *
-     * @author          ...
-     * last author:     $Author: Sfabiano $
-     * @version         $Revision: 28762 $
-     * last modified:   $Modtime: 23/10/07 12.23 $
-     * last check-in:   $Date: 23/10/07 12.39 $
-     */
-    public static class ClonedEvent implements IndexedItemEvent {
-
-        /** Field $objectName$. */
-        protected int maxIndex = 0;
-
-        /** Field $objectName$. */
-        protected String[] names = null;
-
-        /** Field $objectName$. */
-        protected Object[] values = null;
-
-        /**
-         * Constructor ClonedEvent.
-         *
-         * @param  toClone  ...
-         */
-        public ClonedEvent(IndexedItemEvent toClone) {
-            super();
-            if (toClone == null) {
-                return;
+        @Override
+        public Mode getSupportedMode() {
+            if (itemName.startsWith(CONTROL_ITEM_PREFIX)) {
+                return Mode.COMMAND;
             }
-            this.maxIndex = toClone.getMaximumIndex();
-            names = new String[this.maxIndex + 1];
-            values = new Object[this.maxIndex + 1];
-            for (int i = 0; i <= this.maxIndex; i++) {
-                //TODO devo clonarli anche internamente???
-                names[i] = toClone.getName(i);
-                values[i] = toClone.getValue(i);
+            return Mode.DISTINCT;
+        }
+
+        @Override
+        public Integer getDistinctSnapshotLength() {
+            if (itemName.startsWith(NEWS_ITEM_PREFIX)) {
+                return 30;
             }
+            return null;
         }
 
-        /**
-         * Method getMaximumIndex.
-         * @return ...
-         */
-        public int getMaximumIndex() {
-            return this.maxIndex;
-        }
+        @Override
+        public synchronized CompletionStage<Void> subscribe(ItemListener listener) throws SubscriptionException {
+            this.listener = listener;
+            itemListeners.put(itemName, listener);
 
-        /**
-         * Method getIndex.
-         *
-         * @param  arg0  ...
-         * @return ...
-         */
-        public int getIndex(String arg0) {
-            int i = 0;
-            for (i = 0; i <= this.maxIndex; i++) {
-                if (arg0.equals(names[i])) {
-                    break;
-                }
+            logger.debug("New item: " + itemName);
+
+            String userName = "";
+            boolean isFeed = false;
+            if (itemName.indexOf(CONTROL_ITEM_PREFIX) == 0) {
+                userName = itemName.substring(CONTROL_ITEM_PREFIX.length());
+                logger.debug("Subscribing control item for " + itemName);
+            } else if (itemName.indexOf(NEWS_ITEM_PREFIX) == 0) {
+                userName = itemName.substring(NEWS_ITEM_PREFIX.length());
+                isFeed = true;
+                logger.debug("Subscribing news item for: " + itemName);
+            } else {
+                throw new SubscriptionException("Unexpected item name: " + itemName);
             }
 
-            if (i > this.maxIndex) {
-                return 0;
+            AggregatorUser thisUser = getUser(userName, true);
+
+            if (!isFeed) {
+                thisUser.setControlSubscribed(true);
+                logger.debug("Control item OK: " + itemName);
+            } else {
+                thisUser.setFeedSubscribed(true);
+                logger.debug("Feed item OK: " + itemName);
             }
 
-            return i;
+            return CompletableFuture.completedFuture(null);
         }
 
-        /**
-         * Method getName.
-         *
-         * @param  arg0  ...
-         * @return ...
-         */
-        public String getName(int arg0) {
-            return names[arg0];
-        }
-
-        /**
-         * Method getValue.
-         *
-         * @param  arg0  ...
-         * @return ...
-         */
-        public Object getValue(int arg0) {
-            return values[arg0];
-        }
-
-    }
-
-    /**
-     * Method cloneControlEvent.
-     *
-     * @param  event  ...
-     * @param  key  ...
-     * @param  setDelete  ...
-     * @return ...
-     */
-    public static IndexedItemEvent cloneControlEvent(IndexedItemEvent event,
-                                                     String key,
-                                                     boolean setDelete) {
-        if (!setDelete) {
-            int feedIndex = event.getIndex("titolo");
-            int controlIndex = event.getIndex("controllo");
-            return new ControlEvent(key, (String) event.getValue(feedIndex),
-                                    (String) event.getValue(controlIndex));
-        } else {
-            return new ControlEvent(key);
-        }
-
-    }
-
-    /**
-     * Class ControlEvent.
-     *
-     * @author          ...
-     * last author:     $Author: Sfabiano $
-     * @version         $Revision: 28762 $
-     * last modified:   $Modtime: 23/10/07 12.23 $
-     * last check-in:   $Date: 23/10/07 12.39 $
-     */
-    public static class ControlEvent extends ClonedEvent {
-
-        /**
-         * Constructor ControlEvent.
-         *
-         * @param  key  ...
-         * @param  feed  ...
-         * @param  mex  ...
-         */
-        public ControlEvent(String key, String feed, String mex) {
-            super(null);
-            names = new String[4];
-            values = new Object[4];
-            this.maxIndex = 3;
-            this.names[0] = "titolo";
-            this.values[0] = feed;
-            this.names[1] = "controllo";
-            this.values[1] = mex;
-            this.names[2] = "key";
-            this.values[2] = key;
-            this.names[3] = "command";
-            this.values[3] = "UPDATE";
-        }
-
-        /**
-         * Constructor ControlEvent.
-         *
-         * @param  key  ...
-         */
-        public ControlEvent(String key) {
-            super(null);
-            names = new String[4];
-            values = new Object[4];
-            this.maxIndex = 3;
-            this.names[0] = "titolo";
-            this.values[0] = "";
-            this.names[1] = "controllo";
-            this.values[1] = "";
-            this.names[2] = "key";
-            this.values[2] = key;
-            this.names[3] = "command";
-            this.values[3] = "DELETE";
-        }
-
-        /**
-         * Method equals.
-         *
-         * @param  newer  ...
-         * @return ...
-         */
-        public boolean equals(Object newer) {
-            IndexedItemEvent newerIIE = null;
-            try {
-                newerIIE = (IndexedItemEvent) newer;
-            } catch (ClassCastException cce) {
-                return false;
-            }
-            int feedIndex = newerIIE.getIndex("titolo");
-
-            if (this.values[0].equals((String) newerIIE.getValue(feedIndex))) {
-                int controlIndex = newerIIE.getIndex("controllo");
-                if (this.values[0].equals(
-                        (String) newerIIE.getValue(controlIndex))) {
-                    return true;
-                }
-            }
-
+        @Override
+        public boolean isSnapshotAvailable() {
             return false;
         }
 
+        @Override
+        public synchronized CompletionStage<Void> unsubscribe() throws SubscriptionException {
+            itemListeners.remove(itemName);
+            this.listener = null;
+
+            String userName = "";
+            boolean isFeed = false;
+            if (itemName.indexOf(CONTROL_ITEM_PREFIX) == 0) {
+                userName = itemName.substring(CONTROL_ITEM_PREFIX.length());
+                logger.debug("Control item (remove): " + itemName);
+            } else if (itemName.indexOf(NEWS_ITEM_PREFIX) == 0) {
+                userName = itemName.substring(NEWS_ITEM_PREFIX.length());
+                isFeed = true;
+                logger.debug("Feed item (remove): " + itemName);
+            } else {
+                throw new SubscriptionException("Unexpected item name: " + itemName);
+            }
+
+            AggregatorUser thisUser = getUser(userName, false);
+
+            if (thisUser == null) {
+                logger.debug("->" + itemName + "<- User lost? | " + isFeed);
+            } else {
+                if (!isFeed) {
+                    thisUser.setControlSubscribed(false);
+                    logger.debug("Control item (remove) OK: " + itemName);
+                } else {
+                    thisUser.setFeedSubscribed(false);
+                    logger.debug("Feed item (remove) OK: " + itemName);
+                }
+
+                if (!thisUser.isSomethingSubscribed()) {
+                    //we have to remove all the feeds subscribed by this user
+                    Object[] feeds = thisUser.getAllFeeds();
+                    for (int i = 0; i < feeds.length; i++) {
+                        RSSDataAdapter.this.unsubscribeRSS((String) feeds[i], userName);
+                    }
+                    RSSDataAdapter.this.removeUser(userName);
+                    logger.debug("Removing user " + userName);
+                }
+            }
+
+            return CompletableFuture.completedFuture(null);
+        }
+    }
+
+
+    /**
+     * Inner class that implements RSSEventListener to receive callbacks
+     * from the RSSReaderProvider and route them through the aggregation logic.
+     */
+    private class ReaderListener implements RSSEventListener {
+
+        @Override
+        public void update(String feed, Map<String, String> event) {
+            logger.debug("Update for " + feed);
+            AggregatorFeed thisFeed = getFeed(feed, false);
+            if (thisFeed == null) {
+                logger.debug("Feed not subscribed " + feed);
+                return;
+            }
+            thisFeed.updateFeed(event);
+        }
+
+        @Override
+        public void updateStatus(String controlName, Map<String, String> event) {
+            logger.debug("Update for " + controlName);
+            String feed = controlName.substring(9);
+            AggregatorFeed thisFeed = getFeed(feed, false);
+            if (thisFeed == null) {
+                logger.debug("Feed not subscribed " + feed);
+                return;
+            }
+            thisFeed.updateFeedStatus(event);
+        }
+
+        @Override
+        public void endOfSnapshot(String itemName) {
+            if (itemName.indexOf("CONTROLLO") == 0) { //CONTROLLO is used in the wrapped RSS reader
+                return;
+            }
+            logger.debug("EOS " + itemName);
+            AggregatorFeed thisFeed = getFeed(itemName, false);
+            if (thisFeed == null) {
+                logger.debug("Feed not subscribed " + itemName);
+                return;
+            }
+            thisFeed.endOfSnapshot();
+        }
     }
 
 }

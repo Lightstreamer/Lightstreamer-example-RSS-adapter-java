@@ -22,7 +22,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.Level;
 
-import com.lightstreamer.interfaces.data.IndexedItemEvent;
+import java.util.HashMap;
 
 /**
  * Class ErrorProducer.
@@ -40,7 +40,7 @@ class ErrorProducer extends Thread {
     //riferimento al produttore di notizie (ne viene sfruttato il semaforo)
     private RssProducer myRif;
     private boolean snap;
-    private Object itemKey;
+    private String itemKey;
     private boolean push;
     private boolean rifSnap = true;
 
@@ -55,7 +55,7 @@ class ErrorProducer extends Thread {
      * @param  itemKey  ...
      * @param  mainTh  ...
      */
-    public ErrorProducer(RSSReaderProvider provider, Object itemKey,
+    public ErrorProducer(RSSReaderProvider provider, String itemKey,
                          String mainTh, boolean push) {
         super("Control Thread for RSS @ " + mainTh);
 
@@ -105,42 +105,18 @@ class ErrorProducer extends Thread {
     }
 
     private void sendToServer(String mex, String title) {
-        final String[] event = new String[2];
+        String controlValue;
         if (!(mex.equals("")) && (mex != null)) {
-            event[1] = mex;
+            controlValue = mex;
         } else {
-            event[1] = "";
+            controlValue = "";
         }
         if (!(title.equals("")) && (title != null)) {
-            event[0] = title;
+            HashMap<String, String> event = new HashMap<>();
+            event.put("titolo", title);
+            event.put("controllo", controlValue);
 
-            this.provider.getListener().smartUpdate(itemKey,
-                                                    new IndexedItemEvent() {
-                public int getMaximumIndex() {
-                    return 1;
-                }
-
-                public int getIndex(String name) {
-                    if (name.equals("controllo")) {
-                        return 1;
-                    } else {
-                        return 0;
-                    }
-                }
-
-                public String getName(int index) {
-                    if (index == 1) {
-                        return "controllo";
-                    } else {
-                        return "titolo";
-                    }
-                }
-
-                public Object getValue(int index) {
-                    return event[index];
-                }
-
-            }, false);
+            this.provider.getListener().updateStatus(itemKey, event);
         }
     }
 
@@ -179,7 +155,7 @@ class ErrorProducer extends Thread {
     /**
      * @param itemKey The itemKey to set.
      */
-    public void setItemKey(Object itemKey) {
+    public void setItemKey(String itemKey) {
         this.itemKey = itemKey;
     }
     /**

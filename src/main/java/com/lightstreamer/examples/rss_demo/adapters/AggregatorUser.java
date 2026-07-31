@@ -19,13 +19,14 @@
 package com.lightstreamer.examples.rss_demo.adapters;
 
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.Level;
 
-import com.lightstreamer.interfaces.data.IndexedItemEvent;
+import com.lightstreamer.adapter.data.ItemListener;
 
 /**
  * Class AggregatorUser.
@@ -109,10 +110,11 @@ public class AggregatorUser {
 
         if (this.isControlSubscribed()) {
         	//the control item could be already be removed.
-	        IndexedItemEvent copy = RSSDataAdapter.cloneControlEvent(null,
-	                                    feed, true);
-	        listener.getListener().update(RSSDataAdapter.CONTROL_ITEM_PREFIX
-	                                      + this.userName, copy, false);
+	        Map<String, String> copy = new HashMap<>();
+	        copy.put(ItemListener.KEY_FIELD, feed);
+	        copy.put(ItemListener.COMMAND_FIELD, ItemListener.DELETE_COMMAND);
+	        listener.sendUpdate(RSSDataAdapter.CONTROL_ITEM_PREFIX
+	                                      + this.userName, copy);
         }
     }
     
@@ -251,16 +253,15 @@ public class AggregatorUser {
      * @param  update  ...
      * @param  isSnap  ...
      */
-    public void updateNews(IndexedItemEvent update, boolean isSnap) {
+    public void updateNews(Map<String, String> update, boolean isSnap) {
         if (!this.isFeedSubscribed()) {
             return;
         }
 
-        IndexedItemEvent copy = null;
-        copy = RSSDataAdapter.cloneEvent(update);
+        Map<String, String> copy = new HashMap<>(update);
 
-        //listener.getListener().update(this.userName,copy,isSnap);
-        listener.getListener().update(RSSDataAdapter.NEWS_ITEM_PREFIX+this.userName, copy, false);
+        //listener.sendUpdate(this.userName,copy);
+        listener.sendUpdate(RSSDataAdapter.NEWS_ITEM_PREFIX+this.userName, copy);
 
         this.userLog("UPDATE", Level.DEBUG);
     }
@@ -291,16 +292,19 @@ public class AggregatorUser {
      * @param  update  ...
      * @param  key  ...
      */
-    public void updateNewsStatus(IndexedItemEvent update, String key) {
+    public void updateNewsStatus(Map<String, String> update, String key) {
         if (!this.isControlSubscribed()) {
             return;
         }
 
-        IndexedItemEvent copy = null;
-        copy = RSSDataAdapter.cloneControlEvent(update, key, false);
+        Map<String, String> copy = new HashMap<>();
+        copy.put("titolo", update.get("titolo"));
+        copy.put("controllo", update.get("controllo"));
+        copy.put(ItemListener.KEY_FIELD, key);
+        copy.put(ItemListener.COMMAND_FIELD, ItemListener.UPDATE_COMMAND);
 
-        listener.getListener().update(RSSDataAdapter.CONTROL_ITEM_PREFIX
-                                      + this.userName, copy, false);
+        listener.sendUpdate(RSSDataAdapter.CONTROL_ITEM_PREFIX
+                                      + this.userName, copy);
 
         this.userLog("Control UPDATE", Level.DEBUG);
     }

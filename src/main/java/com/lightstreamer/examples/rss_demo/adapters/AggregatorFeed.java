@@ -20,6 +20,7 @@ package com.lightstreamer.examples.rss_demo.adapters;
 
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Map;
 import java.util.Set;
 
 import org.apache.logging.log4j.LogManager;
@@ -28,8 +29,7 @@ import org.apache.logging.log4j.Level;
 
 import com.lightstreamer.examples.rss_demo.rss_reader.RSSReaderProvider;
 
-import com.lightstreamer.interfaces.data.IndexedItemEvent;
-import com.lightstreamer.interfaces.data.SubscriptionException;
+import com.lightstreamer.adapter.data.SubscriptionException;
 /**
  * Class AggregatorFeed.
  *
@@ -54,7 +54,7 @@ public class AggregatorFeed {
     private LinkedList snapshot = new LinkedList();
     private boolean snapshotCompleted = false;
 
-    private IndexedItemEvent controlSnapshot = null;
+    private Map<String, String> controlSnapshot = null;
     private Object cSnapshot = new Object();
 
     /**
@@ -90,8 +90,8 @@ public class AggregatorFeed {
         String cFeed = "CONTROLLO" + this.feed;
         if (userProg == 1) {
             try {
-                RSSReader.subscribe(this.feed, this.feed, true);
-                RSSReader.subscribe(cFeed, cFeed, true);
+                RSSReader.subscribe(this.feed, this.feed);
+                RSSReader.subscribe(cFeed, cFeed);
                 this.feedLog("Subscribed to reader", Level.DEBUG);
             } catch (SubscriptionException e) {
                 this.feedLog("Error subscribing RSS to reader", Level.ERROR);
@@ -111,7 +111,7 @@ public class AggregatorFeed {
             tmp = (LinkedList) snapshot.clone();
         }
         for (int i = 0; i < tmp.size(); i++) {
-            userObj.updateNews((IndexedItemEvent) tmp.get(i), false);
+            userObj.updateNews((Map<String, String>) tmp.get(i), false);
         }
 
         this.feedLog("Snapshot sent to " + userObj.getUserName(), Level.DEBUG);
@@ -123,13 +123,15 @@ public class AggregatorFeed {
      * @param  userObj  ...
      */
     public void sendControlSnapshot(AggregatorUser userObj) {
-        IndexedItemEvent cTmp = null;
+        Map<String, String> cTmp = null;
 
         if (controlSnapshot != null) {
             synchronized (cSnapshot) {
-                cTmp = RSSDataAdapter.cloneControlEvent(controlSnapshot,
-                                                                this.feed,
-                                                                false);
+                cTmp = new HashMap<>();
+                cTmp.put("titolo", controlSnapshot.get("titolo"));
+                cTmp.put("controllo", controlSnapshot.get("controllo"));
+                cTmp.put("key", this.feed);
+                cTmp.put("command", "UPDATE");
             }
             userObj.updateNewsStatus(cTmp, this.feed);
             this.feedLog("Control Snapshot sent to " + userObj.getUserName(),
@@ -167,9 +169,9 @@ public class AggregatorFeed {
      *
      * @param  update  ...
      */
-    public void updateFeed(IndexedItemEvent update) {
-        IndexedItemEvent updateClone =
-        	RSSDataAdapter.cloneEvent(update);
+    public void updateFeed(Map<String, String> update) {
+        Map<String, String> updateClone =
+        	new HashMap<>(update);
         synchronized (snapshotTraffic) {
             snapshot.addLast(updateClone);
             if (snapshotCompleted) {
@@ -194,7 +196,7 @@ public class AggregatorFeed {
      *
      * @param  update  ...
      */
-    public void updateFeedStatus(IndexedItemEvent update) {
+    public void updateFeedStatus(Map<String, String> update) {
         synchronized (cSnapshot) {
             if ((controlSnapshot != null) && controlSnapshot.equals(update)) {
                 return;
